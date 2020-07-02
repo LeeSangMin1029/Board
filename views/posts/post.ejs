@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include ("../partial/header.ejs") %>
+  </head>
+
+  <body>
+    <%- include ("../partial/navbar.ejs") %> <%- include ("../partial/body.ejs")
+    %>
+    <div class="container">
+      <div class="card border-dark mb-3" style="max-width: 18rem;">
+        <div class="card-body text-dark">
+          <h5 class="card-title"><%= post.title %></h5>
+          <p class="card-text">
+            <%= post.body %>
+          </p>
+        </div>
+      </div>
+      <a class="btn btn-primary" href="/posts">Back</a>
+      <a class="btn btn-primary" href="/posts/<%= post.id %>/edit">Edit</a>
+    </div>
+  </body>
+</html>

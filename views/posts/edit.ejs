@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include ("../partial/header.ejs") %>
+  </head>
+
+  <body>
+    <%- include ("../partial/navbar.ejs") %> <%- include ("../partial/body.ejs")
+    %>
+    <div class="container">
+      <h4>Edit Post</h4>
+
+      <form action="/posts/<%= post._id %>?_method=PUT" method="POST">
+        Title :
+        <input type="text" name="title" value="<%= post.title %>" /><br />
+        Body : <input type="text" name="body" value="<%= post.body %>" /><br />
+        <a class="btn btn-primary mb-2" href="/posts/<%= post._id %>">Back</a>
+        <button type="submit" class="btn btn-primary mb-2">Edit</button>
+      </form>
+    </div>
+  </body>
+</html>
