@@ -24,7 +24,7 @@
           <tr>
             <td><a href="/posts/<%= post._id %>"><%= post.title %></a></td>
             <td><%= post.body %></td>
-            <td><%= post.createdAt %></td>
+            <td><%= moment(post.createdAt).format('YYYY-MM-DD') %></td>
           </tr>
           <% }) %>
         </tbody>

@@ -9,12 +9,16 @@
     %>
     <div class="container">
       <h4>New Post</h4>
-
-      <form name="createPost" action="/posts" method="POST">
+      <form method="POST" novalidate>
         Title : <input type="text" name="title" /><br />
-        Body : <input type="text" name="body" /><br />
+        Body : <input type="text" name="postBody" /><br />
         <a class="btn btn-primary mb-2" href="/posts" role="button">Back</a>
-        <input type="submit" class="btn btn-primary mb-2" value="create" />
+        <input
+          type="submit"
+          class="btn btn-primary mb-2"
+          value="create"
+          formaction="/posts"
+        />
       </form>
     </div>
   </body>
