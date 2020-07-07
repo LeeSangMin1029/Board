@@ -9,9 +9,28 @@
     %>
     <div class="container">
       <h4>New Post</h4>
-      <form method="POST" novalidate>
-        Title : <input type="text" name="title" /><br />
-        Body : <input type="text" name="postBody" /><br />
+      <form class="needs-validation" method="POST" novalidate>
+        <div class="col-md-6 mb-3">
+          <label>Title</label>
+          <input
+            type="text"
+            name="title"
+            class="form-control"
+            placeholder="title"
+          />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Body</label>
+          <div class="form-group">
+            <textarea
+              type="text"
+              name="postBody"
+              class="form-control"
+              placeholder="body"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
         <a class="btn btn-primary mb-2" href="/posts" role="button">Back</a>
         <input
           type="submit"

@@ -11,9 +11,23 @@
       <h4>Edit Post</h4>
 
       <form method="POST">
-        Title :
-        <input type="text" name="title" value="<%= post.title %>" /><br />
-        Body : <input type="text" name="body" value="<%= post.body %>" /><br />
+        <div class="col-md-6 mb-3">
+          <label>Title</label>
+          <input
+            type="text"
+            name="title"
+            class="form-control"
+            value="<%= post.title %>"
+          />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Body</label>
+          <div class="form-group">
+            <textarea type="text" name="postBody" class="form-control" rows="3">
+<%= post.body %></textarea
+            >
+          </div>
+        </div>
         <a class="btn btn-primary mb-2" href="/posts/<%= post._id %>">Back</a>
         <button
           type="submit"
