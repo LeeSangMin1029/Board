@@ -1,21 +1,31 @@
 const Post = require("../models/Post");
+const util = require("../utils");
 const moment = require("moment");
 
 // 사용자가 글을 생성할 수 있는 폼을 가진 페이지를 그려준다
 const renderNewPost = (req, res) => {
-  res.render("posts/new");
+  const post = req.flash("post")[0] || {};
+  const errors = req.flash("errors")[0] || {};
+  res.render("posts/new", { post: post, errors: errors });
 };
 
 // 사용자가 글을 수정가능한 페이지를 그려준다.
 const renderEditPost = (req, res) => {
-  Post.findOne({ _id: req.params.id })
-    .exec()
-    .then((post) => {
-      res.render("posts/edit", { post: post });
-    })
-    .catch((err) => {
-      return res.json(err);
-    });
+  const post = req.flash("post")[0];
+  const errors = req.flash("errors")[0] || {};
+  if (!post) {
+    Post.findOne({ _id: req.params.id })
+      .exec()
+      .then((post) => {
+        res.render("posts/edit", { post: post, errors: errors });
+      })
+      .catch((err) => {
+        res.json(err);
+      });
+  } else {
+    post._id = req.params.id;
+    res.render("posts/edit", { post: post, errors: errors });
+  }
 };
 
 // 글을 생성하는데 필요한 요소를 입력하고 Create
@@ -32,7 +42,9 @@ const createPost = (req, res) => {
       res.redirect("/posts");
     })
     .catch((err) => {
-      return res.redirect("/posts/new");
+      req.flash("post", req.body);
+      req.flash("errors", util.errorHandler(err));
+      res.redirect("/posts/new");
     });
 };
 
@@ -45,7 +57,7 @@ const getPosts = (req, res) => {
       res.render("posts/index", { posts: posts, moment: moment });
     })
     .catch((err) => {
-      return res.send(err);
+      res.send(err);
     });
 };
 
@@ -54,26 +66,32 @@ const getPost = (req, res) => {
   Post.findOne({ _id: req.params.id })
     .exec()
     .then((post) => {
-      res.render("posts/post", { post: post });
+      res.render("posts/post", { post: post, moment: moment });
     })
     .catch((err) => {
-      return res.json(err);
+      res.json(err);
     });
 };
 
 // 글을 수정하는 페이지에서 수정 후에 Edit 버튼을 눌렀을 때
 // 해당 함수가 실행되고 수정된 글로 다시 이동
 const updatePost = (req, res) => {
-  // req안에 들어있는 body변수를 꺼낸다?
-  const { body } = req;
-  const postPayload = { ...body, updatedAt: Date.now() };
-  Post.findOneAndUpdate({ _id: req.params.id }, postPayload)
+  const postPayload = {
+    title: req.body.title,
+    body: req.body.postBody,
+    updatedAt: Date.now(),
+  };
+  Post.findOneAndUpdate({ _id: req.params.id }, postPayload, {
+    runValidators: true,
+  })
     .exec()
     .then(() => {
       res.redirect("/posts/" + req.params.id);
     })
     .catch((err) => {
-      return res.json(err);
+      req.flash("post", postPayload);
+      req.flash("errors", util.errorHandler(err));
+      res.redirect("/posts/" + req.params.id + "/edit");
     });
 };
 

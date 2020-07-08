@@ -18,16 +18,18 @@ app.set("view engine", "ejs");
 
 // DB 설정
 // test라는 db 생성
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function () {
-  console.log("db connected!");
-});
-
 mongoose.connect("mongodb://localhost/test", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
+  useCreateIndex: true,
+});
+const db = mongoose.connection;
+db.once("open", function () {
+  console.log("DB connected");
+});
+db.on("error", function (err) {
+  console.log("DB ERROR : ", err);
 });
 
 // 이미지, CSS 파일 및 javascript 파일과 같은 정적 파일을

@@ -9,26 +9,45 @@
     %>
     <div class="container">
       <h4>New Post</h4>
-      <form class="needs-validation" method="POST" novalidate>
+      <form method="POST" novalidate>
         <div class="col-md-6 mb-3">
-          <label>Title</label>
-          <input
-            type="text"
-            name="title"
-            class="form-control"
-            placeholder="title"
-          />
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              class="form-control <%= errors.title ? 'is-invalid' : ''%>"
+              placeholder="title"
+              value="<%= post.title %>"
+              required
+            />
+            <% if(errors.title) { %>
+            <div class="invalid-feedback">
+              <%= errors.title.message %>
+            </div>
+            <% } %>
+          </div>
         </div>
         <div class="col-md-6 mb-3">
-          <label>Body</label>
           <div class="form-group">
+            <label for="body">Body</label>
             <textarea
               type="text"
               name="postBody"
-              class="form-control"
+              id="body"
+              class="form-control <%= errors.body ? 'is-invalid' : ''%>"
               placeholder="body"
               rows="3"
-            ></textarea>
+              required
+            >
+<%= post.body %></textarea
+            >
+            <% if(errors.body) { %>
+            <div class="invalid-feedback">
+              <%= errors.body.message %>
+            </div>
+            <% } %>
           </div>
         </div>
         <a class="btn btn-primary mb-2" href="/posts" role="button">Back</a>
