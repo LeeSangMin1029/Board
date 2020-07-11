@@ -3,7 +3,6 @@
   <head>
     <%- include ("../partial/header.ejs") %>
   </head>
-
   <body>
     <%- include ("../partial/navbar.ejs") %> <%- include ("../partial/body.ejs")
     %>
@@ -14,21 +13,14 @@
           <tr>
             <th scope="col">Title</th>
             <th scope="col">Body</th>
-            <th scope="col">createdAt</th>
+            <th scope="col">CreatedAt</th>
           </tr>
         </thead>
-        <tbody>
-          <% if(posts == null || posts.length == 0){ %>
-          <td>no post</td>
-          <% } %> <% posts.forEach(function(post){ %>
-          <tr>
-            <td><a href="/posts/<%= post._id %>"><%= post.title %></a></td>
-            <td><%= post.body %></td>
-            <td><%= moment(post.createdAt).format('YYYY-MM-DD') %></td>
-          </tr>
-          <% }) %>
-        </tbody>
+        <!-- 게시글이 ajax를 통해서 추가된다 -->
+        <tbody id="tbody-posts"></tbody>
       </table>
+      <!-- page를 나타내는 list가 ajax를 통해서 추가된다 -->
+      <nav aria-label="Page navigation example" id="nav-page"></nav>
       <a class="btn btn-primary" href="/posts/new" role="button">New</a>
     </div>
   </body>

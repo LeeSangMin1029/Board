@@ -1,7 +1,6 @@
 node_modules
 
 connection.js
-utils.mjs
 .env
 public/js/dateformat.js
 public/js/error_handling.js

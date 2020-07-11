@@ -22,6 +22,22 @@ const errorHandler = (errors) => {
   return parsed;
 };
 
+// function once(fn, context) {
+//   let result;
+
+//   // 최종적으로 return 값은 result가 된다.
+//   return function () {
+//     if (fn) {
+//       // apply는 js의 표준내장객체이다. 자세한 건 더 알아봐야겠다.
+//       result = fn.apply(context || this, arguments);
+//       fn = null;
+//     }
+
+//     return result;
+//   };
+// }
+
 module.exports = {
   errorHandler: errorHandler,
+  // once: once,
 };
