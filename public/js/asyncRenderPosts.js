@@ -34,7 +34,7 @@ function renderPosts(posts) {
   posts.forEach((post) => {
     const anchor = `<a href="/posts/${post._id}">${post.title}</a>`;
     const body = post.body;
-    //let createdDate = moment(post.createdAt).format("YYYY-MM-DD");
+    //const createdDate = moment(post.createdAt).format("YYYY-MM-DD");
     const tableData = `<td>${anchor}</td>
       <td>${body}</td>
       <td>${10}</td>`;

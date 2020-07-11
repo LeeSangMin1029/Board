@@ -16,33 +16,17 @@
             <input
               type="text"
               name="title"
-              class="form-control <%= errors.title ? 'is-invalid' : '' %>"
+              class="form-control"
               value="<%= post.title %>"
-              required
             />
-            <% if(errors.title) { %>
-            <div class="invalid-feedback">
-              <%= errors.title.message %>
-            </div>
-            <% } %>
           </div>
         </div>
         <div class="col-md-6 mb-3">
           <div class="form-group">
             <label>Body</label>
-            <textarea
-              name="postBody"
-              class="form-control <%= errors.body ? 'is-invalid' : '' %>"
-              rows="3"
-              required
-            >
+            <textarea name="postBody" class="form-control" rows="3">
 <%= post.body %></textarea
             >
-            <% if(errors.body) { %>
-            <div class="invalid-feedback">
-              <%= errors.body.message %>
-            </div>
-            <% } %>
           </div>
         </div>
         <a class="btn btn-primary mb-2" href="/posts/<%= post._id %>">Back</a>

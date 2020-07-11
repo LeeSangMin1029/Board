@@ -1,28 +1,18 @@
 const Post = require("../models/Post");
 const util = require("../utils");
-const moment = require("moment");
 
 // 사용자가 글을 생성할 수 있는 폼을 가진 페이지를 그려준다
 const renderNewPost = (req, res) => {
-  const post = req.flash("post")[0] || {};
-  const errors = req.flash("errors")[0] || {};
-  res.render("posts/new", { post: post, errors: errors });
+  return res.render("posts/new");
 };
 
 // 사용자가 글을 수정가능한 페이지를 그려준다.
 const renderEditPost = async (req, res) => {
-  const post = req.flash("post")[0];
-  const errors = req.flash("errors")[0] || {};
-  if (!post) {
-    try {
-      const post = await Post.findOne({ _id: req.params.id }).exec();
-      res.render("posts/edit", { post: post, errors: errors });
-    } catch (err) {
-      res.send(err);
-    }
-  } else {
-    post._id = req.params.id;
-    res.render("posts/edit", { post: post, errors: errors });
+  try {
+    const post = await Post.findOne({ _id: req.params.id }).lean();
+    return res.render("posts/edit", { post: post });
+  } catch (err) {
+    return res.send(err);
   }
 };
 
@@ -35,12 +25,10 @@ const createPost = async (req, res) => {
       title: req.body.title,
       body: req.body.postBody,
     });
-    const postSave = post.save();
-    res.redirect("/posts");
+    await post.save();
+    return res.redirect("/posts");
   } catch (err) {
-    req.flash("post", req.body);
-    req.flash("errors", util.errorHandler(err));
-    res.redirect("/posts/new");
+    return res.redirect("/posts/new");
   }
 };
 
@@ -57,23 +45,35 @@ const getPosts = async (req, res) => {
         .skip(startIndex)
         .sort("-createdAt")
         .lean();
-      const postCount = await Post.countDocuments().exec();
+      const postCount = await Post.countDocuments();
       const pageCount = (postCount / limit) | 0;
       return res.json({ posts: posts, count: pageCount });
+    } else {
+      return res.render("posts/index");
     }
-    res.render("posts/index");
   } catch (err) {
-    res.send(err);
+    return res.send(err);
   }
 };
 
 // 글의 상세 페이지를 찾아서 출력
 const getPost = async (req, res) => {
   try {
-    const post = await Post.findOne({ _id: req.params.id }).exec();
-    res.render("posts/post", { post: post, moment: moment });
+    const post = await Post.findOne({ _id: req.params.id }).lean();
+    const payload = { ...post };
+    const createdDate = {
+      date: payload.createdAt,
+      formatString: "YYYY-MM-DD HH:mm:ss",
+    };
+    payload.createdAt = util.dateFormatting(createdDate);
+    const updatedDate = {
+      date: payload.updatedAt,
+      formatString: "YYYY-MM-DD HH:mm:ss",
+    };
+    payload.updatedAt = util.dateFormatting(updatedDate);
+    return res.render("posts/post", { post: payload });
   } catch (err) {
-    res.json(err);
+    return res.json(err);
   }
 };
 
@@ -86,24 +86,22 @@ const updatePost = async (req, res) => {
     updatedAt: Date.now(),
   };
   try {
-    Post.findOneAndUpdate({ _id: req.params.id }, postPayload, {
+    await Post.findOneAndUpdate({ _id: req.params.id }, postPayload, {
       runValidators: true,
-    }).exec();
-    res.redirect("/posts/" + req.params.id);
+    });
+    return res.redirect("/posts/" + req.params.id);
   } catch (err) {
-    req.flash("post", postPayload);
-    req.flash("errors", util.errorHandler(err));
-    res.redirect("/posts/" + req.params.id + "/edit");
+    return res.redirect("/posts/" + req.params.id + "/edit");
   }
 };
 
 // 글을 실제 DB에서 삭제하는 함수
 const deletePost = async (req, res) => {
   try {
-    await Post.findOneAndDelete({ _id: req.params.id }).exec();
-    res.redirect("/posts");
+    await Post.findOneAndDelete({ _id: req.params.id });
+    return res.redirect("/posts");
   } catch (err) {
-    res.json(err);
+    return res.json(err);
   }
 };
 

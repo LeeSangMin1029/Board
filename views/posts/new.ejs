@@ -17,16 +17,9 @@
               type="text"
               name="title"
               id="title"
-              class="form-control <%= errors.title ? 'is-invalid' : ''%>"
+              class="form-control"
               placeholder="title"
-              value="<%= post.title %>"
-              required
             />
-            <% if(errors.title) { %>
-            <div class="invalid-feedback">
-              <%= errors.title.message %>
-            </div>
-            <% } %>
           </div>
         </div>
         <div class="col-md-6 mb-3">
@@ -36,18 +29,10 @@
               type="text"
               name="postBody"
               id="body"
-              class="form-control <%= errors.body ? 'is-invalid' : ''%>"
+              class="form-control"
               placeholder="body"
               rows="3"
-              required
-            >
-<%= post.body %></textarea
-            >
-            <% if(errors.body) { %>
-            <div class="invalid-feedback">
-              <%= errors.body.message %>
-            </div>
-            <% } %>
+            ></textarea>
           </div>
         </div>
         <a class="btn btn-primary mb-2" href="/posts" role="button">Back</a>

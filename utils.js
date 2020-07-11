@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 // const wrapper = (asyncFn) => {
 //   return async (req, res, next) => {
 //     try {
@@ -22,6 +24,15 @@ const errorHandler = (errors) => {
   return parsed;
 };
 
+const dateFormatting = (dateObject) => {
+  const { date, formatString } = dateObject;
+  if (date) {
+    return moment(date).format(formatString);
+  } else {
+    return "";
+  }
+};
+
 // function once(fn, context) {
 //   let result;
 
@@ -39,5 +50,6 @@ const errorHandler = (errors) => {
 
 module.exports = {
   errorHandler: errorHandler,
+  dateFormatting: dateFormatting,
   // once: once,
 };
