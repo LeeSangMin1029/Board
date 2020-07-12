@@ -24,8 +24,7 @@ const errorHandler = (errors) => {
   return parsed;
 };
 
-const dateFormatting = (dateObject) => {
-  const { date, formatString } = dateObject;
+const dateFormatting = ({ date, formatString }) => {
   if (date) {
     return moment(date).format(formatString);
   } else {

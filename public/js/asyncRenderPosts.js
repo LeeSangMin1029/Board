@@ -34,10 +34,10 @@ function renderPosts(posts) {
   posts.forEach((post) => {
     const anchor = `<a href="/posts/${post._id}">${post.title}</a>`;
     const body = post.body;
-    //const createdDate = moment(post.createdAt).format("YYYY-MM-DD");
+    const createdDate = post.createdAt;
     const tableData = `<td>${anchor}</td>
       <td>${body}</td>
-      <td>${10}</td>`;
+      <td>${createdDate}</td>`;
     tableRow += tableData + "</tr>";
   });
   document.getElementById("tbody-posts").innerHTML = tableRow;

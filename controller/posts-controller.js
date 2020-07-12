@@ -45,13 +45,23 @@ const getPosts = async (req, res) => {
         .skip(startIndex)
         .sort("-createdAt")
         .lean();
+      const payload = [...posts].map((post) => {
+        // 생성일 Formmating
+        post.createdAt = util.dateFormatting({
+          date: post.createdAt,
+          formatString: "YYYY-MM-DD",
+        });
+        return post;
+      });
+      // 페이지 계산 로직
       const postLength = await Post.countDocuments();
       const pageCount = util.getPageCount(postLength, limit);
-      return res.json({ posts: posts, count: pageCount });
+      return res.json({ posts: payload, count: pageCount });
     } else {
       return res.render("posts/index");
     }
   } catch (err) {
+    console.log(err);
     return res.send(err);
   }
 };
@@ -61,16 +71,15 @@ const getPost = async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id }).lean();
     const payload = { ...post };
-    const createdDate = {
+
+    payload.createdAt = util.dateFormatting({
       date: payload.createdAt,
       formatString: "YYYY-MM-DD HH:mm:ss",
-    };
-    payload.createdAt = util.dateFormatting(createdDate);
-    const updatedDate = {
+    });
+    payload.updatedAt = util.dateFormatting({
       date: payload.updatedAt,
       formatString: "YYYY-MM-DD HH:mm:ss",
-    };
-    payload.updatedAt = util.dateFormatting(updatedDate);
+    });
     return res.render("posts/post", { post: payload });
   } catch (err) {
     return res.json(err);
