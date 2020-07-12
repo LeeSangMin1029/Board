@@ -45,8 +45,8 @@ const getPosts = async (req, res) => {
         .skip(startIndex)
         .sort("-createdAt")
         .lean();
-      const postCount = await Post.countDocuments();
-      const pageCount = (postCount / limit) | 0;
+      const postLength = await Post.countDocuments();
+      const pageCount = util.getPageCount(postLength, limit);
       return res.json({ posts: posts, count: pageCount });
     } else {
       return res.render("posts/index");

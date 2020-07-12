@@ -33,6 +33,10 @@ const dateFormatting = (dateObject) => {
   }
 };
 
+const getPageCount = (postLength, limit) => {
+  return Math.floor(postLength / limit + (postLength % limit ? 1 : 0));
+};
+
 // function once(fn, context) {
 //   let result;
 
@@ -51,5 +55,6 @@ const dateFormatting = (dateObject) => {
 module.exports = {
   errorHandler: errorHandler,
   dateFormatting: dateFormatting,
+  getPageCount: getPageCount,
   // once: once,
 };

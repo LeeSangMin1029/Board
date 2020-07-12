@@ -46,7 +46,7 @@ function renderPosts(posts) {
 function renderPageNav(pageCount) {
   let result = '<ul class="pagination">';
   let listResult = "";
-  for (let i = 0; i <= pageCount; i++) {
+  for (let i = 0; i < pageCount; i++) {
     const list = '<li class="page-item">';
     const btnPage = `<button class="page-link btn-page">${i + 1}</button>`;
     listResult += list + btnPage + "</li>";
