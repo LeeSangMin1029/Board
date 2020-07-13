@@ -1,0 +1,26 @@
+extends ../partial/layout.pug
+
+block content
+  .container
+    h4 New Post
+    form(method="POST" novalidate)
+      .col-md-6.mb-3
+        .form-group
+          label(for="title") Title
+          input(type="text" name="title" id="title" class="form-control" placeholder="title")/
+      .col-md-6.mb-3
+        .form-group
+          label(for="body") Body
+          textarea(
+            type="text"
+            name="postBody"
+            id="body"
+            class="form-control"
+            placeholder="body"
+            rows="3")
+      a(class="btn btn-primary mb-2" href="/posts" role="button") Back
+      input(
+        type="submit"
+        class="btn btn-primary mb-2"
+        value="Create"
+        formaction="/posts")/

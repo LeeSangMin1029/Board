@@ -1,0 +1,14 @@
+extends ../partial/layout.pug
+
+block content
+  .container
+    h4 boardList
+    table.table.table-sm
+      thead
+        tr
+          th(scope="col") Title
+          th(scope="col") Body
+          th(scope="col") CreatedAt
+      tbody#tbody-posts
+    nav(id='nav-page')
+    a(class="btn btn-primary" href="/posts/new" role="button") New

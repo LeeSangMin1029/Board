@@ -42,7 +42,7 @@ db.on("error", function (err) {
   console.log("DB ERROR : ", err);
 });
 
-app.set("view engine", "ejs");
+app.set("view engine", "pug");
 app.use("/static", express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

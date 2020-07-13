@@ -1,0 +1,19 @@
+extends ../partial/layout.pug
+
+block content
+  .container
+    .card.border-dark.mb-3(style='max-width: 18rem;')
+      .card-body.text-dark
+        h5.card-title Title: #{post.title}
+          p.card-text Body: #{post.body}
+          p.card-text: small.text-muted createdAt : #{post.createdAt}
+    a(class="btn btn-primary" href="/posts") Back
+    a(class="btn btn-primary" href=`/posts/${post._id}/edit`) Edit
+    form(
+      method="POST"
+      onsubmit="return confirm('Are you sure you want to delete this post?');")
+      button(
+        class="btn btn-primary"
+        id="delbtn"
+        type="submit"
+        formaction=`/posts/${ post._id }?_method=DELETE`) Delete

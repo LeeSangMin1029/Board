@@ -1,0 +1,25 @@
+extends ../partial/layout.pug
+
+block content
+  .container
+    h4 Edit Post
+    form(method="POST" novalidate)
+      .col-md-6.mb-3
+        .form-group
+          label Title
+          input(type="text" name="title" class="form-control" value=`${post.title}`)
+      .col-md-6.mb-3
+        .form-group
+          label Body
+          textarea(
+            type="text"
+            name="postBody"
+            id="body"
+            class="form-control"
+            placeholder="body"
+            rows="3") #{post.body}
+      a(class="btn btn-primary mb-2" href=`/posts/${ post._id }`) Back
+      button(
+        type="submit"
+        class="btn btn-primary mb-2"
+        formaction=`/posts/${ post._id }?_method=PUT`) Edit
