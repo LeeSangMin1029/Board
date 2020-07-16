@@ -1,5 +1,8 @@
 extends ../partial/layout.pug
 
+block append head
+  script(type="text/javascript" src="/static/js/PaginatedPosts.js")
+
 block content
   .container
     h4 boardList
@@ -9,6 +12,22 @@ block content
           th(scope="col") Title
           th(scope="col") Body
           th(scope="col") CreatedAt
-      tbody#tbody-posts
-    nav(id='nav-page')
-    a(class="btn btn-primary" href="/posts/new" role="button") New
+      // 글 목록 생성
+      +tablebody(posts)
+    // 페이지 기능
+    +navPage()
+    a(class="btn btn-primary" href="/posts/new") New
+
+mixin navPage()
+  nav#nav-page
+    ul.pagination
+      - for (let i = 0; i < count; i++)
+        li.page-item: a.page-link(href=`/posts/page${i+1}`)= i+1
+
+mixin tablebody(posts)
+  tbody#tbody-posts
+    each post in posts
+      tr
+        td: a.post-link(href=`/posts/${post._id}`)= `${post.title}`
+        td= `${post.body}`
+        td= `${post.createdAt}`

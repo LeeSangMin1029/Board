@@ -32,39 +32,28 @@ const createPost = async (req, res) => {
   }
 };
 
-// 글 목록을 생성된 순서대로 페이지에 출력한다
-const getPosts = async (req, res) => {
-  try {
-    const page = req.query.page === undefined ? 0 : parseInt(req.query.page);
-    const limit = 5;
+const getPaginatedPosts = util.wrap(async (req, res) => {
+  const page = req.params.page;
+  const limit = 5;
+  const startIndex = (page - 1) * limit;
+  const posts = getPostArray(
+    await Post.find().limit(limit).skip(startIndex).sort("-createdAt").lean()
+  );
+  const postLength = await Post.countDocuments();
+  const pageCount = util.getPageCount(postLength, limit);
+  return res.format({
+    "text/html": function () {
+      return res.render("posts/index", { posts: posts, count: pageCount });
+    },
+    "application/json": function () {
+      return res.json({ posts: posts });
+    },
+  });
+});
 
-    if (page) {
-      const startIndex = (page - 1) * limit;
-      const posts = await Post.find()
-        .limit(limit)
-        .skip(startIndex)
-        .sort("-createdAt")
-        .lean();
-      const payload = [...posts].map((post) => {
-        // 생성일 Formmating
-        post.createdAt = util.dateFormatting({
-          date: post.createdAt,
-          formatString: "YYYY-MM-DD",
-        });
-        return post;
-      });
-      // 페이지 계산 로직
-      const postLength = await Post.countDocuments();
-      const pageCount = util.getPageCount(postLength, limit);
-      return res.json({ posts: payload, count: pageCount });
-    } else {
-      return res.render("posts/index");
-    }
-  } catch (err) {
-    console.log(err);
-    return res.send(err);
-  }
-};
+const rePaginatedPosts = util.wrap(async (req, res) => {
+  return res.redirect("/posts/page/1");
+});
 
 // 글의 상세 페이지를 찾아서 출력
 const getPost = async (req, res) => {
@@ -119,7 +108,19 @@ module.exports = {
   renderEditPost: renderEditPost,
   createPost: createPost,
   getPost: getPost,
-  getPosts: getPosts,
+  getPaginatedPosts: getPaginatedPosts,
   updatePost: updatePost,
   deletePost: deletePost,
+  rePaginatedPosts: rePaginatedPosts,
 };
+
+function getPostArray(posts) {
+  return [...posts].map((post) => {
+    // 생성일 Formmating
+    post.createdAt = util.dateFormatting({
+      date: post.createdAt,
+      formatString: "YYYY-MM-DD",
+    });
+    return post;
+  });
+}

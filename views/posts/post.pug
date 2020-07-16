@@ -4,9 +4,9 @@ block content
   .container
     .card.border-dark.mb-3(style='max-width: 18rem;')
       .card-body.text-dark
-        h5.card-title Title: #{post.title}
-          p.card-text Body: #{post.body}
-          p.card-text: small.text-muted createdAt : #{post.createdAt}
+        h5.card-title #{post.title}
+        p.card-text #{post.body}
+        small.text-muted createdAt : #{post.createdAt}
     a(class="btn btn-primary" href="/posts") Back
     a(class="btn btn-primary" href=`/posts/${post._id}/edit`) Edit
     form(

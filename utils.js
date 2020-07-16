@@ -1,14 +1,14 @@
 const moment = require("moment");
 
-// const wrapper = (asyncFn) => {
-//   return async (req, res, next) => {
-//     try {
-//       return await asyncFn(req, res, next);
-//     } catch (error) {
-//       return next(error);
-//     }
-//   };
-// };
+const wrap = (asyncFn) => {
+  return async (req, res, next) => {
+    try {
+      return await asyncFn(req, res, next);
+    } catch (error) {
+      return next(error);
+    }
+  };
+};
 
 // title : message, body : message의 꼴로 만드는 함수
 const errorHandler = (errors) => {
@@ -55,5 +55,6 @@ module.exports = {
   errorHandler: errorHandler,
   dateFormatting: dateFormatting,
   getPageCount: getPageCount,
+  wrap: wrap,
   // once: once,
 };

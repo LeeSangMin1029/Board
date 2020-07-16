@@ -1,26 +1,71 @@
 extends ../partial/layout.pug
 
 block content
+  +mainContent('New Post')
+
+mixin mainContent(title)
   .container
-    h4 New Post
-    form(method="POST" novalidate)
-      .col-md-6.mb-3
-        .form-group
-          label(for="title") Title
-          input(type="text" name="title" id="title" class="form-control" placeholder="title")/
-      .col-md-6.mb-3
-        .form-group
-          label(for="body") Body
+    h4= title
+    +form('POST')
+      +inputableTag('input', 'Title', 'title', 'form-control', 'title')
+      +inputableTag('textarea', 'Body', 'postBody', 'form-control', 'body')
+      +anchor('/posts', 'btn btn-primary mb-2', 'Back')
+        input(
+          type="submit"
+          class="btn btn-primary mb-2"
+          value="Create"
+          formaction="/posts")/
+
+mixin form(method='GET')
+  form(method=method)
+    if block
+      block
+
+mixin inputableTag(tag, labelName, name, className, placeholder='', type="text")
+  .col-md-6.mb-3
+    .form-group
+      label.h4=labelName
+      case tag
+        when 'input'
+          input(
+            type=type
+            name=name
+            class=className
+            placeholder=placeholder)/
+        when 'textarea'
           textarea(
-            type="text"
-            name="postBody"
-            id="body"
-            class="form-control"
-            placeholder="body"
+            type=type
+            name= name
+            class= className
+            placeholder= placeholder
             rows="3")
-      a(class="btn btn-primary mb-2" href="/posts" role="button") Back
-      input(
-        type="submit"
-        class="btn btn-primary mb-2"
-        value="Create"
-        formaction="/posts")/
+
+mixin anchor(href, className, text)
+  a(class=className href=href role="button")&attributes(attributes)= text
+
+
+
+
+//- .container
+//-   h4 New Post
+//-   form(method="POST" novalidate)
+//-     .col-md-6.mb-3
+//-       .form-group
+//-         label Title
+//-         input(type="text" name="title" id="title" class="form-control" placeholder="title")/
+//-     .col-md-6.mb-3
+//-       .form-group
+//-         label Body
+//-         textarea(
+//-           type="text"
+//-           name="postBody"
+//-           id="body"
+//-           class="form-control"
+//-           placeholder="body"
+//-           rows="3")
+//-     a(class="btn btn-primary mb-2" href="/posts" role="button") Back
+//-     input(
+//-       type="submit"
+//-       class="btn btn-primary mb-2"
+//-       value="Create"
+//-       formaction="/posts")/

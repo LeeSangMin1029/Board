@@ -1,7 +1,9 @@
 doctype html
 html(lang="en")
-  include header.pug
+  head
+    block head
+      include header.pug
+      include body.pug
   body
     include navbar.pug
-    include body.pug
     block content
