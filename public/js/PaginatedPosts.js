@@ -10,24 +10,25 @@
 })();
 
 window.onpopstate = function (event) {
-  const data = event.state;
-  console.log("pop event");
-  document.getElementById("tbody-posts").innerHTML = data.posts;
+  console.log(event);
+  const page = window.location.pathname.split("/")[3];
+  getPosts(page);
 };
 
-async function documentReady() {
-  moveToPage();
-  //prePushState();
+function renderErrorMsg(err) {
+  document.getElementById("tbody-posts").innerHTML = `<tr>${err}</tr>`;
 }
 
-function prePushState() {
-  const tableData = document.getElementById("tbody-posts").childNodes;
-  let result = "";
-  for (let i = 0; i < tableData.length; i++) {
-    result += `<tr>${tableData[i].innerHTML}</tr>`;
-  }
-  const url = new URL(window.location.href);
-  history.pushState({ posts: result }, null, url.pathname);
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+function isEmptyArray(arr) {
+  return Array.isArray(arr) && !arr.length;
+}
+
+function documentReady() {
+  moveToPage();
 }
 
 function moveToPage() {
@@ -36,6 +37,7 @@ function moveToPage() {
     a.addEventListener("click", function (e) {
       e.preventDefault();
       getPosts(page);
+      history.pushState(null, null, `/posts/page/${page}`);
     });
   });
   // document.querySelectorAll(".post-link").forEach((a) => {
@@ -77,23 +79,13 @@ function getXHR({ url, data, method = "GET" }, async = true) {
   });
 }
 
-// function getPost(href) {
-//   try {
-//     const { post } = await getXHR({ url: href });
-
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-
-function renderPosts(posts, page) {
+function renderPosts(posts) {
   let result = "";
   for (const post of posts) {
     result += `<tr><td><a href="/posts/${post._id}">${post.title}</a></td>
       <td>${post.body}</td>
       <td>${post.createdAt}</td></tr>`;
   }
-  history.pushState({ posts: result }, null, `/posts/page/${page}`);
   document.getElementById("tbody-posts").innerHTML = result;
 }
 
@@ -103,31 +95,11 @@ async function getPosts(page) {
     if (isEmptyArray(posts)) {
       renderErrorMsg(`There are no posts please create it`);
     } else {
-      const tableData = document.getElementById("tbody-posts").childNodes;
-      let result = "";
-      for (let i = 0; i < tableData.length; i++) {
-        result += `<tr>${tableData[i].innerHTML}</tr>`;
-      }
-      const url = new URL(window.location.href);
-      history.pushState({ posts: result }, null, url.pathname);
-
-      renderPosts(posts, page);
+      renderPosts(posts);
     }
   } catch (err) {
     console.log(err);
   }
-}
-
-function renderErrorMsg(err) {
-  document.getElementById("tbody-posts").innerHTML = `<tr>${err}</tr>`;
-}
-
-function isEmptyObject(obj) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
-}
-
-function isEmptyArray(arr) {
-  return Array.isArray(arr) && !arr.length;
 }
 
 function safeParseJSON(json) {
