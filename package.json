@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "public/*",
+      ".gitignore",
+      "README.md"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -19,5 +26,8 @@
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.20",
     "pug": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }

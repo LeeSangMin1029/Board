@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = Router();
-const postsCtrl = require("../controller/posts-controller.js");
+const postsCtrl = require("../controller/posts-controller");
 
 router.route("/").get(postsCtrl.rePaginatedPosts).post(postsCtrl.createPost);
 router.route("/page/:page").get(postsCtrl.getPaginatedPosts);

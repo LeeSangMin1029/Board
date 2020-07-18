@@ -75,8 +75,6 @@ const getPost = async (req, res) => {
   }
 };
 
-// 글을 수정하는 페이지에서 수정 후에 Edit 버튼을 눌렀을 때
-// 해당 함수가 실행되고 수정된 글로 다시 이동
 const updatePost = async (req, res) => {
   const postPayload = {
     title: req.body.title,
@@ -84,11 +82,10 @@ const updatePost = async (req, res) => {
     updatedAt: Date.now(),
   };
   try {
-    await Post.findOneAndUpdate({ _id: req.params.id }, postPayload, {
-      runValidators: true,
-    });
+    await Post.findOneAndUpdate({ _id: req.params.id }, postPayload);
     return res.redirect("/posts/" + req.params.id);
   } catch (err) {
+    console.log(err);
     return res.redirect("/posts/" + req.params.id + "/edit");
   }
 };
