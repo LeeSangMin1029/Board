@@ -1,9 +1,14 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const methodOverride = require("method-override");
-const mongoose = require("mongoose");
+import express from "express";
+import bodyParser from "body-parser";
+import methodOverride from "method-override";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import path from "path";
+const __dirname =
+  path.dirname(new URL(import.meta.url).pathname).slice(1) + "/";
+console.log(__dirname);
+dotenv.config();
 
-require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT;
 
@@ -16,7 +21,7 @@ mongoose.connect("mongodb://localhost/test", {
 
 const db = mongoose.connection;
 db.once("open", async () => {
-  // const Post = require("./models/Post");
+  // const Post = "./models/Post");
   // if ((await Post.countDocuments().exec()) > 0) return;
   // Promise.all([
   //   Post.create({ title: "title1", body: "body1" }),
@@ -43,13 +48,17 @@ db.on("error", function (err) {
 });
 
 app.set("view engine", "pug");
-app.use("/static", express.static(__dirname + "/public"));
+app.use("/static", express.static(`${__dirname}public`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-app.use("/", require("./routes/home"));
-app.use("/posts", require("./routes/posts"));
+// route setting
+import home from "./routes/home.js";
+import posts from "./routes/posts.js";
+
+app.use("/", home);
+app.use("/posts", posts);
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);

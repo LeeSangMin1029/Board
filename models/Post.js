@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
   title: { type: String, required: [true, "Title is required"] },
@@ -7,4 +7,5 @@ const postSchema = new mongoose.Schema({
   updatedAt: Date,
 });
 
-module.exports = mongoose.model("Post", postSchema);
+const Post = mongoose.model("Post", postSchema);
+export default Post;

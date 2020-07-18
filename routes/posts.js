@@ -1,16 +1,16 @@
-const { Router } = require("express");
-const router = Router();
-const postsCtrl = require("../controller/posts-controller");
+import express from "express";
+const posts = express.Router();
+import * as postsCtrl from "../controller/posts-controller.js";
 
-router.route("/").get(postsCtrl.rePaginatedPosts).post(postsCtrl.createPost);
-router.route("/page/:page").get(postsCtrl.getPaginatedPosts);
+posts.route("/").get(postsCtrl.rePaginatedPosts).post(postsCtrl.createPost);
+posts.route("/page/:page").get(postsCtrl.getPaginatedPosts);
 // posts/create의 경로로 get요청이 오면 새로 페이지를 그려준다.
-router.get("/new", postsCtrl.renderNewPost);
-router
+posts.get("/new", postsCtrl.renderNewPost);
+posts
   .route("/:id")
   .get(postsCtrl.getPost)
   .put(postsCtrl.updatePost)
   .delete(postsCtrl.deletePost);
-router.get("/:id/edit", postsCtrl.renderEditPost);
+posts.get("/:id/edit", postsCtrl.renderEditPost);
 
-module.exports = router;
+export default posts;

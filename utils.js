@@ -1,4 +1,4 @@
-const moment = require("moment");
+import moment from "moment";
 
 const wrap = (asyncFn) => {
   return async (req, res, next) => {
@@ -36,25 +36,4 @@ const getPageCount = (postLength, limit) => {
   return Math.floor(postLength / limit + (postLength % limit ? 1 : 0));
 };
 
-// function once(fn, context) {
-//   let result;
-
-//   // 최종적으로 return 값은 result가 된다.
-//   return function () {
-//     if (fn) {
-//       // apply는 js의 표준내장객체이다. 자세한 건 더 알아봐야겠다.
-//       result = fn.apply(context || this, arguments);
-//       fn = null;
-//     }
-
-//     return result;
-//   };
-// }
-
-module.exports = {
-  errorHandler: errorHandler,
-  dateFormatting: dateFormatting,
-  getPageCount: getPageCount,
-  wrap: wrap,
-  // once: once,
-};
+export { errorHandler, dateFormatting, getPageCount, wrap };

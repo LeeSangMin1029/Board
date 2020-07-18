@@ -1,5 +1,5 @@
-const Post = require("../models/Post");
-const util = require("../utils");
+import Post from "../models/Post.js";
+import * as util from "../utils.js";
 
 // 사용자가 글을 생성할 수 있는 폼을 가진 페이지를 그려준다
 const renderNewPost = (req, res) => {
@@ -100,15 +100,15 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = {
-  renderNewPost: renderNewPost,
-  renderEditPost: renderEditPost,
-  createPost: createPost,
-  getPost: getPost,
-  getPaginatedPosts: getPaginatedPosts,
-  updatePost: updatePost,
-  deletePost: deletePost,
-  rePaginatedPosts: rePaginatedPosts,
+export {
+  renderNewPost,
+  renderEditPost,
+  createPost,
+  getPost,
+  getPaginatedPosts,
+  updatePost,
+  deletePost,
+  rePaginatedPosts,
 };
 
 function getPostArray(posts) {
