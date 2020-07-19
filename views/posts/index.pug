@@ -15,17 +15,19 @@ block content
           th(scope="col") Title
           th(scope="col") Body
           th(scope="col") CreatedAt
-      // 글 목록 생성
       +tablebody(posts)
-    // 페이지 기능
-    +navPage()
+    +pagination()
     a(class="btn btn-primary" href="/posts/new") New
 
-mixin navPage()
-  nav#nav-page
-    ul.pagination
-      - for (let i = 0; i < count; i++)
-        li.page-item: a.page-link(href=`/posts/page${i+1}`)= i+1
+mixin pagination()
+  div.paginate: div.page-wrap
+    - for (let i = 1; i <= count; i++)
+      - if(page==i)
+        button.page.current-page(href=`/posts/page${i}`)
+          em.num-page= i
+      - else
+        button.page(href=`/posts/page${i}`)
+          em.num-page= i
 
 mixin tablebody(posts)
   tbody#tbody-posts
@@ -34,3 +36,6 @@ mixin tablebody(posts)
         td: a.post-link(href=`/posts/${post._id}`)= `${post.title}`
         td= `${post.body}`
         td= `${post.createdAt}`
+    else
+      tr
+        td There are no posts please create it

@@ -6,12 +6,18 @@ window.onpopstate = function (event) {
   getPosts(page);
 };
 
-document.querySelectorAll(".page-link").forEach((a) => {
-  let page = a.textContent | 0;
-  a.addEventListener("click", function (e) {
-    e.preventDefault();
-    getPosts(page);
-    history.pushState(null, null, `/posts/page/${page}`);
+document.querySelectorAll(".page").forEach((btn) => {
+  btn.addEventListener("click", async function (e) {
+    const page = btn.childNodes[0].textContent | 0;
+    const currentPage = document.getElementsByClassName("current-page");
+    if (!currentPage.length) {
+      this.classList.add("current-page");
+    } else {
+      currentPage[0].classList.remove("current-page");
+      this.classList.add("current-page");
+      await getPosts(page);
+      history.pushState(null, null, `/posts/page/${page}`);
+    }
   });
 });
 
