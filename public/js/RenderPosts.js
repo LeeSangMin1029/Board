@@ -37,7 +37,7 @@ function renderPosts(posts) {
 
 async function getPosts(page) {
   try {
-    const { posts } = await getData({ url: `/posts/page/${page}` });
+    const { posts } = await getData(`/posts/page/${page}`);
     if (isEmptyArray(posts)) {
       renderErrorMsg(`There are no posts please create it`);
     } else {

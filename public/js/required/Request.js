@@ -1,6 +1,6 @@
 import { isEmptyObject, safeParseJSON } from "../utils/ObjectValidation.js";
 
-function getXHR({ url, data, method = "GET" }, async = true) {
+function getXHR(url, data, method = "GET", async = true) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, async);
