@@ -4,9 +4,9 @@ import methodOverride from "method-override";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import path from "path";
+import Post from "./models/Post.js";
 const __dirname =
   path.dirname(new URL(import.meta.url).pathname).slice(1) + "/";
-console.log(__dirname);
 dotenv.config();
 
 const app = express();
@@ -21,8 +21,7 @@ mongoose.connect("mongodb://localhost/test", {
 
 const db = mongoose.connection;
 db.once("open", async () => {
-  // const Post = "./models/Post");
-  // if ((await Post.countDocuments().exec()) > 0) return;
+  // if (await Post.countDocuments().exec() > 0) return;
   // Promise.all([
   //   Post.create({ title: "title1", body: "body1" }),
   //   Post.create({ title: "title2", body: "body2" }),
