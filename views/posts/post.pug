@@ -14,6 +14,5 @@ block content
       onsubmit="return confirm('Are you sure you want to delete this post?');")
       button(
         class="btn btn-primary"
-        id="delbtn"
         type="submit"
         formaction=`/posts/${ post._id }?_method=DELETE`) Delete

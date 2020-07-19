@@ -1,5 +1,8 @@
 extends ../components/partial/layout.pug
 
+block append style
+  link(rel="stylesheet" type="text/css" href="/static/css/paginate.css")
+  
 block append head
   script(defer type="module" src="/static/js/RenderPosts.js")
 
