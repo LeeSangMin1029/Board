@@ -3,7 +3,12 @@ import * as util from "../utils.js";
 
 // 사용자가 글을 생성할 수 있는 폼을 가진 페이지를 그려준다
 const renderNewPost = (req, res) => {
-  return res.render("posts/new");
+  try {
+    console.log("render new post");
+    return res.render("posts/new");
+  } catch (err) {
+    return res.send(err);
+  }
 };
 
 // 사용자가 글을 수정가능한 페이지를 그려준다.
@@ -22,13 +27,13 @@ const renderEditPost = util.wrap(async (req, res) => {
 const createPost = util.wrap(async (req, res) => {
   try {
     const post = new Post({
-      title: req.body.title,
+      title: req.body.postTitle,
       body: req.body.postBody,
     });
     await post.save();
-    return res.redirect("/posts");
+    return res.json({ redirect: true });
   } catch (err) {
-    return res.redirect("/posts/new");
+    return res.json({ errors: util.errorHandler(err) });
   }
 });
 
@@ -81,7 +86,7 @@ const getPost = util.wrap(async (req, res) => {
 
 const updatePost = util.wrap(async (req, res) => {
   const postPayload = {
-    title: req.body.title,
+    title: req.body.postTitle,
     body: req.body.postBody,
     updatedAt: Date.now(),
   };

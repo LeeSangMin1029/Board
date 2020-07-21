@@ -1,14 +1,21 @@
 extends ../components/partial/layout.pug
-include ../components/form/inputable_tag.pug
+include ../components/form/formChildNode.pug
 
 block content
   .container
     h4 Edit Post
     form(method="POST" novalidate)
-      +inputableTag("input", "Title", "title", "title", "form-control", "title")(value=post.title)
-      +inputableTag("textarea", "Body", "body", "postBody", "form-control", "body")= post.body
-      a(class="btn btn-primary mb-2" href=`/posts/${ post._id }`) Back
-      button(
-        type="submit"
-        class="btn btn-primary mb-2"
-        formaction=`/posts/${ post._id }?_method=PUT`) Edit
+      fieldset
+        .title-area
+          label(for="title")
+            h4 Title
+          +inputableTag("input", "title", "postTitle", "uit-title", "title")(value=post.title)
+        .body-area
+          label(for="body")
+            h4 Body
+          +inputableTag("textarea", "body", "postBody", "uit-body", "body")= post.body
+        a(class="btn btn-primary mb-2" href=`/posts/${ post._id }`) Back
+        button(
+          type="submit"
+          class="btn btn-primary mb-2"
+          formaction=`/posts/${ post._id }?_method=PUT`) Edit

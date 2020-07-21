@@ -1,14 +1,20 @@
 extends ../components/partial/layout.pug
-include ../components/form/inputable_tag.pug
+include ../components/form/formChildNode.pug
 
 block content
   .container
     h4 New Post
     form(method="POST" novalidate)
-      +inputableTag("input", "Title", "title", "title", "form-control", "title")
-      +inputableTag("textarea", "Body", "body", "postBody", "form-control", "body")
-      a(class="btn btn-primary mb-2" href="/posts" role="button") Back
-      button(
+      fieldset
+        .title-area
+          label(for="title")
+            h4 Title
+          +userInputTag("input", "title", "postTitle", "uit-title", "title")
+        .body-area
+          label(for="body")
+            h4 Body
+          +userInputTag("textarea", "body", "postBody", "uit-body", "body")
+        a(class="btn btn-primary mb-2" href="/posts" role="button") Back
+        button(
         type="submit"
-        class="btn btn-primary mb-2"
-        formaction="/posts") Create
+        class="btn btn-primary mb-2") Create
