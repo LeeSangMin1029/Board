@@ -1,33 +1,41 @@
-import { isEmptyObject, safeParseJSON } from "../utils/ObjectValidation.js";
+import { isEmpty, safeParseJSON } from "../utils/ObjectValidation.js";
 
 function getXHR(url, data, method = "GET", async = true) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, async);
-    // 헤더 설정 부분은 나중에 수정
-    xhr.setRequestHeader("Accept", "application/json");
     if (method === "POST") {
-      xhr.setRequestHeader("Accept", "application/json");
-      xhr.onreadystatechange = function () {
-        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-          res(safeParseJSON(this.responseText));
+      //xhr.setRequestHeader("Accept", "application/json");
+      xhr.addEventListener("load", function () {
+        try {
+          res(receivedData(xhr));
+        } catch (err) {
+          rej(err);
         }
-      };
+      });
     } else if (method === "GET") {
-      xhr.onload = function () {
-        if (this.responseText === "") {
-          rej(new Error("Failed to get data from server"));
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.addEventListener("load", function () {
+        try {
+          res(receivedData(xhr));
+        } catch (err) {
+          rej(err);
         }
-        const response = safeParseJSON(this.responseText);
-        if (isEmptyObject(response)) {
-          rej(new Error("An empty object was received from the server"));
-        } else {
-          res(response);
-        }
-      };
+      });
     }
     xhr.send(data);
   });
 }
+
+const receivedData = (xhr) => {
+  if (xhr.responseText === "") {
+    throw new Error("Failed to get data from server");
+  }
+  const response = safeParseJSON(xhr.responseText);
+  if (isEmpty(response)) {
+    throw new Error("An empty object was received from the server");
+  }
+  return response;
+};
 
 export { getXHR as getData };
