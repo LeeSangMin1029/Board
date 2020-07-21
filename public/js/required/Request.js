@@ -4,8 +4,7 @@ function getXHR(url, data, method = "GET", async = true) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, async);
-    if (method === "POST") {
-      //xhr.setRequestHeader("Accept", "application/json");
+    if (method === "POST" || method === "PUT") {
       xhr.addEventListener("load", function () {
         try {
           res(receivedData(xhr));
