@@ -14,7 +14,7 @@ posts.get("/new", postsCtrl.renderNewPost);
 posts
   .route("/:id")
   .get(postsCtrl.getPost)
-  .put(postsCtrl.updatePost)
+  .put(upload.none(), postsCtrl.updatePost)
   .delete(postsCtrl.deletePost);
 posts.get("/:id/edit", postsCtrl.renderEditPost);
 

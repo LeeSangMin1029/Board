@@ -69,7 +69,6 @@ const getPost = util.wrap(async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id }).lean();
     const payload = { ...post };
-
     payload.createdAt = util.dateFormatting({
       date: payload.createdAt,
       formatString: "YYYY-MM-DD HH:mm:ss",
@@ -85,17 +84,19 @@ const getPost = util.wrap(async (req, res) => {
 });
 
 const updatePost = util.wrap(async (req, res) => {
-  const postPayload = {
-    title: req.body.postTitle,
-    body: req.body.postBody,
-    updatedAt: Date.now(),
-  };
   try {
-    await Post.findOneAndUpdate({ _id: req.params.id }, postPayload);
-    return res.redirect("/posts/" + req.params.id);
+    const postPayload = {
+      title: req.body.postTitle,
+      body: req.body.postBody,
+      updatedAt: Date.now(),
+    };
+    await Post.updateOne({ _id: req.params.id }, postPayload, {
+      runValidators: true,
+    });
+    return res.json({ redirect: true });
   } catch (err) {
     console.log(err);
-    return res.redirect("/posts/" + req.params.id + "/edit");
+    return res.json({ errors: util.errorHandler(err) });
   }
 });
 
