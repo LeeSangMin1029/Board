@@ -1,10 +1,11 @@
-import { isEmptyArray } from "./utils/ObjectValidation.js";
-import { getData } from "./required/Request.js";
-
-window.onpopstate = function (event) {
-  const page = window.location.pathname.split("/")[3];
+window.addEventListener("popstate", function () {
+  const page = this.location.pathname.split("/")[3];
+  document
+    .getElementsByClassName("current-page")[0]
+    .classList.remove("current-page");
+  document.querySelectorAll(".page")[page - 1].classList.add("current-page");
   getPosts(page);
-};
+});
 
 document.querySelectorAll(".page").forEach((btn) => {
   btn.addEventListener("click", async function (e) {
@@ -37,6 +38,8 @@ function renderPosts(posts) {
 
 async function getPosts(page) {
   try {
+    const { isEmptyArray } = await import("./utils/ObjectValidation.js");
+    const { getData } = await import("./required/Request.js");
     const { posts } = await getData(`/posts/page/${page}`);
     if (isEmptyArray(posts)) {
       renderErrorMsg(`There are no posts please create it`);
