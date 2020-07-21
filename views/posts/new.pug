@@ -1,6 +1,9 @@
 extends ../components/partial/layout.pug
 include ../components/form/formChildNode.pug
 
+block append head
+  script(defer type="module" src="/static/js/post/NewFormValidation.js")
+
 block content
   .container
     h4 New Post
@@ -14,7 +17,7 @@ block content
           label(for="body")
             h4 Body
           +userInputTag("textarea", "body", "postBody", "uit-body", "body")
-        a(class="btn btn-primary mb-2" href="/posts" role="button") Back
+        a(class="btn btn-primary mb-2" href="/posts") Back
         button(
         type="submit"
         class="btn btn-primary mb-2") Create
