@@ -8,12 +8,20 @@ function safeParseJSON(json) {
   return parsed;
 }
 
-function isEmptyObject(obj) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
+function isEmpty(value) {
+  if (typeof value === "null" || typeof value === "undefined") {
+    return true;
+  }
+  if (Object.keys(value).length === 0 && value.constructor === Object) {
+    console.log(value);
+    return true;
+  }
+
+  return false;
 }
 
 function isEmptyArray(arr) {
   return Array.isArray(arr) && !arr.length;
 }
 
-export { safeParseJSON, isEmptyArray, isEmptyObject };
+export { safeParseJSON, isEmptyArray, isEmpty };
