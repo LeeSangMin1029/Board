@@ -1,8 +1,2 @@
 node_modules
-
-connection.js
 .env
-public/js/dateformat.js
-public/js/error_handling.js
-routes/users.js
-models/User.js
