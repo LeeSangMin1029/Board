@@ -4,6 +4,11 @@ import methodOverride from "method-override";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import path from "path";
+// route setting
+import home from "./routes/home.js";
+import posts from "./routes/posts.js";
+import users from "./routes/users.js";
+
 const __dirname =
   path.dirname(new URL(import.meta.url).pathname).slice(1) + "/";
 dotenv.config();
@@ -32,12 +37,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-// route setting
-import home from "./routes/home.js";
-import posts from "./routes/posts.js";
-
 app.use("/", home);
 app.use("/posts", posts);
+app.use("/users", users);
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
