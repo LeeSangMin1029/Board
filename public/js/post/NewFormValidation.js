@@ -1,22 +1,19 @@
 (async function () {
+  const { getData } = await import("../required/Request.js");
+  const { validateForm } = await import("../utils/FormValidation.js");
   const form = document.querySelector("form");
   form.addEventListener("submit", async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-      const { getData } = await import("../required/Request.js");
-      const formData = new FormData(form);
-      const path = "/posts";
-      const data = await getData(path, formData, "POST");
-      if (typeof data.redirect !== "undefined") {
-        window.location.href = "/posts/page/1";
-      } else if (data.errors) {
-        const { default: addErrorMessage } = await import(
-          "../utils/FormError.js"
-        );
-        await addErrorMessage(data.errors);
+      const formdata = new FormData(form);
+      const { errors, redirect } = await getData("/posts", formdata, "POST");
+      if (typeof errors === "undefined" && redirect) {
+        window.location.href = "/posts";
+      } else {
+        validateForm(formdata, "post new", errors);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.log(err);
     }
   });
 })();

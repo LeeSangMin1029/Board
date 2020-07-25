@@ -1,0 +1,98 @@
+function getPost() {
+  return {
+    new: {
+      postTitle: {
+        class: "title",
+        dbFieldName: "title",
+      },
+      postBody: {
+        class: "body",
+        dbFieldName: "body",
+      },
+    },
+    edit: {
+      postTitle: {
+        class: "title",
+        dbFieldName: "title",
+      },
+      postBody: {
+        class: "body",
+        dbFieldName: "body",
+      },
+    },
+  };
+}
+
+function getUser() {
+  return {
+    register: {
+      name: {
+        class: "name",
+        dbFieldName: "name",
+      },
+      email: {
+        class: "email",
+        dbFieldName: "email",
+      },
+      id: {
+        class: "id",
+        dbFieldName: "id",
+      },
+      password: {
+        class: "origin",
+        dbFieldName: "password",
+      },
+      passwordConfirmation: {
+        class: "confirm",
+        dbFieldName: "passwordConfirmation",
+      },
+    },
+  };
+}
+
+function getFormElementName() {
+  return {
+    user: getUser(),
+    post: getPost(),
+  };
+}
+
+function validateForm(userInputData, formContent, errors) {
+  const [property, formName] = formContent.split(" ");
+  const formAction = { ...getFormElementName()[property][formName] };
+  let formDataKey, errorDoc, error;
+  if (property === "user") {
+    for (const [key] of userInputData.entries()) {
+      console.log(key);
+      formDataKey = formAction[key];
+      errorDoc = document.querySelector(
+        `.${formDataKey["class"]}-area span.error`
+      );
+      error = errors[formDataKey["dbFieldName"]];
+      if (typeof error === "undefined") {
+        errorDoc.innerHTML = "";
+      } else {
+        errorDoc.innerHTML = error.message;
+      }
+    }
+  }
+  // 위와 아래의 코드는 완벽하게 동일하다. 하지만 추후에 변경이 일어날 수도 있기 때문에
+  // 굳이 분리를 해주었다.
+  else if (property === "post") {
+    for (const [key] of userInputData.entries()) {
+      console.log(key);
+      formDataKey = formAction[key];
+      errorDoc = document.querySelector(
+        `.${formDataKey["class"]}-area span.error`
+      );
+      error = errors[formDataKey["dbFieldName"]];
+      if (typeof error === "undefined") {
+        errorDoc.innerHTML = "";
+      } else {
+        errorDoc.innerHTML = error.message;
+      }
+    }
+  }
+}
+
+export { validateForm };

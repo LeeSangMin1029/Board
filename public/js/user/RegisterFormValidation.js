@@ -6,12 +6,11 @@
     e.preventDefault();
     try {
       const formdata = new FormData(form);
-      const path = `/posts/${window.location.pathname.split("/")[2]}`;
-      const { errors, redirect } = await getData(path, formdata, "PUT");
+      const { errors, redirect } = await getData("/users", formdata, "POST");
       if (typeof errors === "undefined" && redirect) {
-        window.location.href = path;
+        window.location.href = "/users";
       } else {
-        validateForm(formdata, "post edit", errors);
+        validateForm(formdata, "user register", errors);
       }
     } catch (err) {
       console.error(err);
