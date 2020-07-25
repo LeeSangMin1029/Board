@@ -8,7 +8,7 @@ block append head
 
 block content
   .container
-    h4 boardList
+    h4 board
     table.table.table-sm
       thead
         tr
@@ -17,7 +17,7 @@ block content
           th(scope="col") CreatedAt
       +tablebody(posts)
     +pagination()
-    a(class="btn btn-primary" href="/posts/new") New
+    a.btn.btn-primary(href="/posts/new") New
 
 mixin pagination()
   div.paginate: div.page-wrap
