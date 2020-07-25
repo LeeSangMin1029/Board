@@ -1,6 +1,6 @@
 import moment from "moment";
 
-const wrap = (asyncFn) => {
+const asyncWrap = (asyncFn) => {
   return async (req, res, next) => {
     try {
       return await asyncFn(req, res, next);
@@ -36,4 +36,4 @@ const getPageCount = (postLength, limit) => {
   return Math.floor(postLength / limit + (postLength % limit ? 1 : 0));
 };
 
-export { errorHandler, dateFormatting, getPageCount, wrap };
+export { errorHandler, dateFormatting, getPageCount, asyncWrap };
