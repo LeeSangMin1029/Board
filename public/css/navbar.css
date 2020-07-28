@@ -12,6 +12,10 @@
   color: white;
 }
 
+.navbar-right {
+  float: right;
+}
+
 .navbar-logo:hover {
   text-decoration: none;
   color: white;

@@ -1,18 +1,18 @@
 extends ../components/partial/layout.pug
 
+block append head
+  script(defer type="module" src="/static/js/post/DeleteSubmitForm.js")
+
 block content
-  .container
+  .main-container
     .card.border-dark.mb-3(style='max-width: 18rem;')
       .card-body.text-dark
         h5.card-title #{post.title}
         p.card-text #{post.body}
-        small.text-muted createdAt : #{post.createdAt}
+        small.text-muted: p createdAt : #{post.createdAt}
+        if(post.updatedAt)
+          small.text-muted: p updatedAt : #{post.updatedAt}
     a(class="btn btn-primary" href="/posts") Back
     a(class="btn btn-primary" href=`/posts/${post._id}/edit`) Edit
-    form(
-      method="POST"
-      onsubmit="return confirm('Are you sure you want to delete this post?');")
-      button(
-        class="btn btn-primary"
-        type="submit"
-        formaction=`/posts/${ post._id }?_method=DELETE`) Delete
+    form(method="POST")
+      button.btn.btn-primary(type="submit") Delete
