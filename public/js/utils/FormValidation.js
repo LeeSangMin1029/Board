@@ -47,6 +47,30 @@ function getUser() {
         dbFieldName: "passwordConfirmation",
       },
     },
+    edit: {
+      id: {
+        class: "id",
+        dbFieldName: "id",
+      },
+      name: {
+        class: "name",
+        dbFieldName: "name",
+      },
+      currentPassword: {
+        class: "current",
+        dbFieldName: "currentPassword",
+      },
+    },
+    login: {
+      email: {
+        class: "email",
+        dbFieldName: "email",
+      },
+      password: {
+        class: "password",
+        dbFieldName: "password",
+      },
+    },
   };
 }
 
@@ -63,7 +87,7 @@ function validateForm(userInputData, formContent, errors) {
   let formDataKey, errorDoc, error;
   if (property === "user") {
     for (const [key] of userInputData.entries()) {
-      console.log(key);
+      if (typeof formAction[key] === "undefined") continue;
       formDataKey = formAction[key];
       errorDoc = document.querySelector(
         `.${formDataKey["class"]}-area span.error`
@@ -80,7 +104,7 @@ function validateForm(userInputData, formContent, errors) {
   // 굳이 분리를 해주었다.
   else if (property === "post") {
     for (const [key] of userInputData.entries()) {
-      console.log(key);
+      if (typeof formAction[key] === "undefined") continue;
       formDataKey = formAction[key];
       errorDoc = document.querySelector(
         `.${formDataKey["class"]}-area span.error`
