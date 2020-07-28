@@ -4,7 +4,7 @@ function getXHR(url, data, method = "GET", async = true) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, async);
-    if (method === "POST" || method === "PUT") {
+    if (method === "POST" || method === "PUT" || method === "DELETE") {
       xhr.addEventListener("load", function () {
         try {
           res(receivedData(xhr));
@@ -27,14 +27,11 @@ function getXHR(url, data, method = "GET", async = true) {
 }
 
 const receivedData = (xhr) => {
-  if (xhr.responseText === "") {
+  const response = xhr.responseText;
+  if (isEmpty(response)) {
     throw new Error("Failed to get data from server");
   }
-  const response = safeParseJSON(xhr.responseText);
-  if (isEmpty(response)) {
-    throw new Error("An empty object was received from the server");
-  }
-  return response;
+  return safeParseJSON(response);
 };
 
 export { getXHR as getData };
