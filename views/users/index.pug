@@ -1,0 +1,19 @@
+extends ../components/partial/layout.pug
+
+block content
+  .main-container
+    h4 Users
+    table.table.table-sm
+      thead
+        tr
+          th(scope="col") Users
+      +tablebody(users)
+
+mixin tablebody(users)
+  tbody
+    each user in users
+      tr
+        td: a(href=`/users/${user._id}`)= `${user.name}`
+    else
+      tr
+        td There are no users please create it

@@ -1,0 +1,35 @@
+extends ../components/partial/layout.pug
+include ../components/form/formChildNode.pug
+
+block append head
+  script(defer type="module" src="/static/js/user/EditFormValidation.js")
+
+block content
+  .main-container
+    h4 Edit User
+    form(method="POST" enctype="multipart/form-data" novalidate)
+      fieldset
+        .pw.current-area
+          label(for="currentPw")
+            h4 Current Password*
+          +userInputTag("input", "currentPw", "currentPassword", "uit currentPassword", "current password", "password")
+        .name-area
+          label(for="name")
+            h4 Name
+          +userInputTag("input", "name", "name", "uit name", "name")(value=user.name)
+        .id-area
+          label(for="id")
+            h4 Id
+          +userInputTag("input", "id", "id", "uit id", "id")(value=user.id)
+        .pw.new-area
+          label(for="pw-new")
+            h4 New Password
+          +userInputTag("input", "pw-new", "newPassword", "uit pw", "new password", "password")
+        .pw.confirm-area
+          label(for="pw-confirm")
+            h4 Password Confirmation
+          +userInputTag("input", "pw-confirm", "passwordConfirmation", "uit pw", "confirm password", "password")
+        a(class="btn btn-primary mb-2" href=`/users/${ user._id }`) Back
+        button(
+        type="submit"
+        class="btn btn-primary mb-2") Update
