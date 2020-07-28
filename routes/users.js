@@ -6,8 +6,14 @@ const upload = multer();
 
 users
   .route("/")
-  .get(usersCtrl.getUsers)
+  .get(usersCtrl.renderUsers)
   .post(upload.none(), usersCtrl.createUser);
 users.get("/register", usersCtrl.renderRegisterForm);
+users
+  .route("/:object_id")
+  .get(usersCtrl.renderUser)
+  .put(upload.none(), usersCtrl.updateUser)
+  .delete(usersCtrl.deleteUser);
+users.get("/:object_id/edit", usersCtrl.renderEditUser);
 
 export default users;
