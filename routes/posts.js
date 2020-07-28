@@ -13,7 +13,7 @@ posts.route("/page/:page").get(postsCtrl.getPaginatedPosts);
 posts.get("/new", postsCtrl.renderNewPost);
 posts
   .route("/:id")
-  .get(postsCtrl.getPost)
+  .get(postsCtrl.renderPost)
   .put(upload.none(), postsCtrl.updatePost)
   .delete(postsCtrl.deletePost);
 posts.get("/:id/edit", postsCtrl.renderEditPost);
