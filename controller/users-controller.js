@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import * as util from "../utils.js";
 
-const getUsers = util.asyncWrap(async (req, res) => {
+const renderUsers = util.asyncWrap(async (req, res) => {
   try {
     const users = await User.find().lean();
     return res.render("users/index", { users: users });

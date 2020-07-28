@@ -37,26 +37,30 @@ const createPost = util.asyncWrap(async (req, res) => {
 });
 
 const getPaginatedPosts = util.asyncWrap(async (req, res) => {
-  const page = req.params.page;
-  const limit = 5;
-  const startIndex = (page - 1) * limit;
-  const posts = getPostArray(
-    await Post.find().limit(limit).skip(startIndex).sort("-createdAt").lean()
-  );
-  const postLength = await Post.countDocuments();
-  const pageCount = util.getPageCount(postLength, limit);
-  return res.format({
-    "text/html": function () {
-      return res.render("posts/index", {
-        posts: posts,
-        count: pageCount,
-        page: page,
-      });
-    },
-    "application/json": function () {
-      return res.json({ posts: posts });
-    },
-  });
+  try {
+    const page = req.params.page;
+    const limit = 5;
+    const startIndex = (page - 1) * limit;
+    const posts = getPostArray(
+      await Post.find().limit(limit).skip(startIndex).sort("-createdAt").lean()
+    );
+    const postLength = await Post.countDocuments();
+    const pageCount = util.getPageCount(postLength, limit);
+    return res.format({
+      "text/html": function () {
+        return res.render("posts/index", {
+          posts: posts,
+          count: pageCount,
+          page: page,
+        });
+      },
+      "application/json": function () {
+        return res.json({ posts: posts });
+      },
+    });
+  } catch (err) {
+    return res.send(err);
+  }
 });
 
 const rePaginatedPosts = util.asyncWrap(async (req, res) => {
@@ -64,7 +68,7 @@ const rePaginatedPosts = util.asyncWrap(async (req, res) => {
 });
 
 // 글의 상세 페이지를 찾아서 출력
-const getPost = util.asyncWrap(async (req, res) => {
+const renderPost = util.asyncWrap(async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id }).lean();
     const payload = { ...post };
@@ -78,7 +82,7 @@ const getPost = util.asyncWrap(async (req, res) => {
     });
     return res.render("posts/post", { post: payload });
   } catch (err) {
-    return res.json(err);
+    return res.send(err);
   }
 });
 
@@ -103,9 +107,9 @@ const updatePost = util.asyncWrap(async (req, res) => {
 const deletePost = util.asyncWrap(async (req, res) => {
   try {
     await Post.findOneAndDelete({ _id: req.params.id });
-    return res.redirect("/posts");
+    return res.json({ redirect: true });
   } catch (err) {
-    return res.json(err);
+    return res.send(err);
   }
 });
 
@@ -113,7 +117,7 @@ export {
   renderNewPost,
   renderEditPost,
   createPost,
-  getPost,
+  renderPost,
   getPaginatedPosts,
   updatePost,
   deletePost,
