@@ -9,7 +9,7 @@
       const path = `/posts/${window.location.pathname.split("/")[2]}`;
       const { errors, redirect } = await getData(path, formdata, "PUT");
       if (typeof errors === "undefined" && redirect) {
-        window.location.href = path;
+        history.back();
       } else {
         validateForm(formdata, "post edit", errors);
       }
