@@ -1,0 +1,23 @@
+extends ../components/partial/layout.pug
+include ../components/form/formChildNode.pug
+
+block append head
+  script(defer type="module" src="/static/js/user/LoginFormValidation.js")
+
+block content
+  .main-container
+    h4 Login
+    form(method="POST" enctype="multipart/form-data" novalidate)
+      fieldset
+        .email-area
+          label(for="email")
+            h4 Email
+          +userInputTag("input", "email", "email", "uit email", "email")
+        .password-area
+          label(for="password")
+            h4 Password
+          +userInputTag("input", "password", "password", "uit password", "password", "password")
+        a(class="btn btn-primary mb-2" href="/") Back
+        button(
+        type="submit"
+        class="btn btn-primary mb-2") Sign in
