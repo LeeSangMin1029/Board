@@ -1,15 +1,6 @@
 import User from "../models/User.js";
 import * as util from "../utils.js";
 
-const renderUsers = util.asyncWrap(async (req, res) => {
-  try {
-    const users = await User.find().lean();
-    return res.render("users/index", { users: users });
-  } catch (err) {
-    return res.send(err);
-  }
-});
-
 const renderRegisterForm = (req, res) => {
   return res.render("users/register");
 };
@@ -78,20 +69,10 @@ const updateUser = util.asyncWrap(async (req, res) => {
   }
 });
 
-const deleteUser = util.asyncWrap(async (req, res) => {
-  try {
-    await User.findOneAndDelete({ _id: req.params.object_id });
-    return res.redirect("/users");
-  } catch (err) {
-    return res.send(err);
-  }
-});
 export {
-  renderUsers,
   renderUser,
   renderEditUser,
   renderRegisterForm,
   createUser,
   updateUser,
-  deleteUser,
 };
