@@ -3,7 +3,6 @@ nav.navbar-root
   ul.navbar-ul
     li.navbar-li: a.navbar-href(href="/posts") board
     .navbar-right
-      li.navbar-li: a.navbar-href(href="/users") users
       - if(isAuthenticated)
         li.navbar-li: a.navbar-href(href="/logout") Logout
         li.navbar-li: a.navbar-href(href=`/users/${currentUser._id}`) My Account

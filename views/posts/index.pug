@@ -14,10 +14,12 @@ block content
         tr
           th(scope="col") Title
           th(scope="col") Body
+          th(scope="col") Author
           th(scope="col") CreatedAt
       +tablebody(posts)
     +pagination()
-    a.btn.btn-primary(href="/posts/new") New
+    - if(isAuthenticated)
+      a.btn.btn-primary(href="/posts/new") New
 
 mixin pagination()
   div.paginate: div.page-wrap
@@ -35,6 +37,7 @@ mixin tablebody(posts)
       tr
         td: a.post-link(href=`/posts/${post._id}`)= `${post.title}`
         td= `${post.body}`
+        td= `${post.author.email}`
         td= `${post.createdAt}`
     else
       tr
