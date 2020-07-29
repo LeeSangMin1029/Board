@@ -7,15 +7,32 @@ const upload = multer();
 posts
   .route("/")
   .get(postsCtrl.rePaginatedPosts)
-  .post(upload.none(), postsCtrl.createPost);
+  .post(util.isLogged, upload.none(), postsCtrl.createPost);
+
 posts.route("/page/:page").get(postsCtrl.getPaginatedPosts);
-// posts/create의 경로로 get요청이 오면 새로 페이지를 그려준다.
-posts.get("/new", postsCtrl.renderNewPost);
+
+posts.get("/new", util.isLogged, postsCtrl.renderNewPost);
+
 posts
   .route("/:id")
-  .get(postsCtrl.renderPost)
-  .put(upload.none(), postsCtrl.updatePost)
-  .delete(postsCtrl.deletePost);
-posts.get("/:id/edit", postsCtrl.renderEditPost);
+  .get(util.isLogged, postsCtrl.renderPost)
+  .put(util.isLogged, checkPermission, upload.none(), postsCtrl.updatePost)
+  .delete(util.isLogged, checkPermission, postsCtrl.deletePost);
+
+posts.get(
+  "/:id/edit",
+  util.isLogged,
+  checkPermission,
+  postsCtrl.renderEditPost
+);
 
 export default posts;
+
+function checkPermission(req, res, next) {
+  Post.findOne({ _id: req.params.id }, function (err, post) {
+    if (err) return res.json(err);
+    if (post.author != req.user.id) return util.noPermission(req, res);
+
+    next();
+  });
+}

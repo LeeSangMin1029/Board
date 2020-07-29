@@ -36,4 +36,24 @@ const getPageCount = (postLength, limit) => {
   return Math.floor(postLength / limit + (postLength % limit ? 1 : 0));
 };
 
-export { errorHandler, dateFormatting, getPageCount, asyncWrap };
+const isLogged = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+
+const noPermission = (req, res) => {
+  req.logout();
+  res.redirect("/login");
+};
+
+export {
+  errorHandler,
+  dateFormatting,
+  getPageCount,
+  asyncWrap,
+  isLogged,
+  noPermission,
+};
