@@ -105,7 +105,6 @@ const updatePost = util.asyncWrap(async (req, res) => {
     });
     return res.json({ redirect: true });
   } catch (err) {
-    console.log(err);
     return res.json({ errors: util.errorHandler(err) });
   }
 });
