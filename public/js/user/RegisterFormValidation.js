@@ -8,7 +8,7 @@
       const formdata = new FormData(form);
       const { errors, redirect } = await getData("/users", formdata, "POST");
       if (typeof errors === "undefined" && redirect) {
-        window.location.replace("/users");
+        window.location.replace("/");
       } else {
         validateForm(formdata, "user register", errors);
       }
