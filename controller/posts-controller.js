@@ -26,6 +26,7 @@ const renderEditPost = util.asyncWrap(async (req, res) => {
 const createPost = util.asyncWrap(async (req, res) => {
   try {
     const post = new Post({
+      author: req.user._id,
       title: req.body.postTitle,
       body: req.body.postBody,
     });
@@ -42,7 +43,11 @@ const getPaginatedPosts = util.asyncWrap(async (req, res) => {
     const limit = 5;
     const startIndex = (page - 1) * limit;
     const posts = getPostArray(
-      await Post.find().limit(limit).skip(startIndex).sort("-createdAt").lean()
+      await Post.find()
+        .skip(startIndex)
+        .sort("-createdAt")
+        .lean()
+        .populate({ path: "author", options: { lean: true, limit: limit } })
     );
     const postLength = await Post.countDocuments();
     const pageCount = util.getPageCount(postLength, limit);
@@ -63,14 +68,16 @@ const getPaginatedPosts = util.asyncWrap(async (req, res) => {
   }
 });
 
-const rePaginatedPosts = util.asyncWrap(async (req, res) => {
+const rePaginatedPosts = (req, res) => {
   return res.redirect("/posts/page/1");
-});
+};
 
 // 글의 상세 페이지를 찾아서 출력
 const renderPost = util.asyncWrap(async (req, res) => {
   try {
-    const post = await Post.findOne({ _id: req.params.id }).lean();
+    const post = await Post.findOne({ _id: req.params.id })
+      .lean()
+      .populate({ path: "author", options: { lean: true } });
     const payload = { ...post };
     payload.createdAt = util.dateFormatting({
       date: payload.createdAt,
