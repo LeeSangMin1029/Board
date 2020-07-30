@@ -16,7 +16,7 @@ posts.get("/new", util.isLogged, postsCtrl.renderNewPost);
 
 posts
   .route("/:id")
-  .get(util.isLogged, postsCtrl.renderPost)
+  .get(postsCtrl.renderPost)
   .put(util.isLogged, checkPermission, upload.none(), postsCtrl.updatePost)
   .delete(util.isLogged, checkPermission, postsCtrl.deletePost);
 
