@@ -1,0 +1,13 @@
+.comment-line {
+  border-top: 1px solid #d3d3d3;
+  padding: 0px 0px 0px 0px;
+}
+
+.text-element {
+  padding: 0px 0px 0px 10px;
+  margin: 0px;
+}
+
+.date {
+  color: #a9a9a9;
+}
