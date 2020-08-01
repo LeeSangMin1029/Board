@@ -74,10 +74,22 @@ function getUser() {
   };
 }
 
+function getComment() {
+  return {
+    new: {
+      text: {
+        class: "text",
+        dbFieldName: "text",
+      },
+    },
+  };
+}
+
 function getFormElementName() {
   return {
     user: getUser(),
     post: getPost(),
+    comment: getComment(),
   };
 }
 
@@ -85,7 +97,7 @@ function validateForm(userInputData, formContent, errors) {
   const [property, formName] = formContent.split(" ");
   const formAction = { ...getFormElementName()[property][formName] };
   let formDataKey, errorDoc, error;
-  if (property === "user") {
+  if (property === "user" || property === "comment") {
     for (const [key] of userInputData.entries()) {
       if (typeof formAction[key] === "undefined") continue;
       formDataKey = formAction[key];

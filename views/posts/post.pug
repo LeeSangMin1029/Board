@@ -1,4 +1,8 @@
 extends ../components/partial/layout.pug
+include ../components/form/formChildNode.pug
+
+block append head
+  script(defer type="module" src="/static/js/comment/NewFormValidation.js")
 
 block content
   .main-container
@@ -15,3 +19,18 @@ block content
       a(class="btn btn-primary" href=`/posts/${post._id}/edit`) Edit
       form(method="POST")
         button.btn.btn-primary(type="submit") Delete
+    h4 comments
+    form(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
+      - if(isAuthenticated)
+        fieldset
+          .text-area
+            +userInputTag("textarea", "", "text", "uit text", "comments")
+            button.btn.btn-primary(type="submit") Add Comment
+      - else
+        fieldset(disabled)
+    - if(comments.length)
+    - console.log(comments[0]);
+      each comment in comments
+        p= `${comment.author.name}`
+        p= `${comment.text}`
+      

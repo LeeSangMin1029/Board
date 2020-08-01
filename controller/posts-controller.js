@@ -1,4 +1,5 @@
 import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
 import * as util from "../utils.js";
 
 // 사용자가 글을 생성할 수 있는 폼을 가진 페이지를 그려준다
@@ -78,6 +79,10 @@ const renderPost = util.asyncWrap(async (req, res) => {
     const post = await Post.findOne({ _id: req.params.id })
       .lean()
       .populate({ path: "author", options: { lean: true } });
+    const comments = await Comment.find({ post: req.params.id })
+      .sort("createdAt")
+      .lean()
+      .populate({ path: "author", select: "name", options: { lean: true } });
     const payload = { ...post };
     payload.createdAt = util.dateFormatting({
       date: payload.createdAt,
@@ -87,7 +92,7 @@ const renderPost = util.asyncWrap(async (req, res) => {
       date: payload.updatedAt,
       formatString: "YYYY-MM-DD HH:mm:ss",
     });
-    return res.render("posts/post", { post: payload });
+    return res.render("posts/post", { post: payload, comments: comments });
   } catch (err) {
     return res.send(err);
   }
@@ -128,6 +133,7 @@ export {
   updatePost,
   deletePost,
   rePaginatedPosts,
+  checkPermission,
 };
 
 function getPostArray(posts) {
@@ -140,3 +146,14 @@ function getPostArray(posts) {
     return post;
   });
 }
+
+const checkPermission = util.asyncWrap(async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ _id: req.params.id });
+    if (post.author != req.user._id) return util.noPermission(req, res);
+    next();
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});

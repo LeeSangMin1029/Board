@@ -11,6 +11,7 @@ import passport from "./config/passport.js";
 import home from "./routes/home.js";
 import posts from "./routes/posts.js";
 import users from "./routes/users.js";
+import comments from "./routes/comments.js";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname).slice(1);
 dotenv.config();
@@ -56,6 +57,7 @@ app.use(function (req, res, next) {
 app.use("/", home);
 app.use("/posts", posts);
 app.use("/users", users);
+app.use("/comment", comments);
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
