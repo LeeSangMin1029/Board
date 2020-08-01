@@ -4,6 +4,9 @@ include ../components/form/formChildNode.pug
 block append head
   script(defer type="module" src="/static/js/comment/NewFormValidation.js")
 
+block append style
+  link(rel="stylesheet" href="/static/css/comment.css")/
+
 block content
   .main-container
     .card.border-dark.mb-3(style='max-width: 18rem;')
@@ -31,6 +34,7 @@ block content
     - if(comments.length)
     - console.log(comments[0]);
       each comment in comments
-        p= `${comment.author.name}`
-        p= `${comment.text}`
-      
+        .comment-line
+          p.text-element= `${comment.text}`
+          p.text-element= `${comment.author.name}`
+          p.text-element.date= `${comment.createdAt}`
