@@ -12,7 +12,7 @@ const createComment = util.asyncWrap(async (req, res) => {
     return res.json({ redirect: true });
   } catch (err) {
     console.log(err);
-    return res.json({ error: util.errorHandler(err) });
+    return res.json({ errors: util.errorHandler(err) });
   }
 });
 
