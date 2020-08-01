@@ -32,7 +32,6 @@ block content
       - else
         fieldset(disabled)
     - if(comments.length)
-    - console.log(comments[0]);
       each comment in comments
         .comment-line
           p.text-element= `${comment.text}`
