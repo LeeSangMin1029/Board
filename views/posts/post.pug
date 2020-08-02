@@ -5,35 +5,36 @@ block append head
   script(defer type="module" src="/static/js/comment/NewFormValidation.js")
 
 block append style
-  link(rel="stylesheet" href="/static/css/comment.css")/
+  link(rel="stylesheet" href="/static/css/detail.css")/
 
 block content
   .main-container
-    .card.border-dark.mb-3(style='max-width: 18rem;')
-      .card-body.text-dark
-        h5.card-title #{post.title}
-        p.card-text #{post.body}
-        p #{post.author.email}
-        small.text-muted: p createdAt : #{post.createdAt}
+    .post-header
+      .title #{post.title}
+      .info
+        p.text #{post.author.name}
+        small: p.text createdAt : #{post.createdAt}
         if(post.updatedAt)
-          small.text-muted: p updatedAt : #{post.updatedAt}
-    a(class="btn btn-primary" href="/posts") Back
-    - if(isAuthenticated && post.author && currentUser._id.toString() === post.author._id.toString())
-      a(class="btn btn-primary" href=`/posts/${post._id}/edit`) Edit
-      form(method="POST")
-        button.btn.btn-primary(type="submit") Delete
-    h4 comments
-    form(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
-      - if(isAuthenticated)
-        fieldset
-          .text-area
-            +userInputTag("textarea", "", "text", "uit text", "comments")
-            button.btn.btn-primary(type="submit") Add Comment
-      - else
-        fieldset(disabled)
-    - if(comments.length)
-      each comment in comments
-        .comment-line
-          p.text-element= `${comment.text}`
-          p.text-element= `${comment.author.name}`
-          p.text-element.date= `${comment.createdAt}`
+          small: p.text updatedAt : #{post.updatedAt}
+    .post-body
+      p #{post.body}
+      a.btn(href="/posts") Back
+      - if(isAuthenticated && post.author && currentUser._id.toString() === post.author._id.toString())
+        a.btn(href=`/posts/${post._id}/edit`) Edit
+        form(method="POST"): button.btn(type="submit") Delete
+    .post-footer
+      h4 comments
+      form(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
+        - if(isAuthenticated)
+          fieldset
+            .text-area
+              +userInputTag("textarea", "", "text", "uit text", "comments")
+              button.btn(type="submit") Add Comment
+        - else
+          fieldset(disabled)
+      - if(comments.length)
+        each comment in comments
+          .comment-line
+            p.text= `${comment.text}`
+            p.text= `${comment.author.name}`
+            p.text.date= `${comment.createdAt}`

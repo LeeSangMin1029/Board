@@ -7,6 +7,6 @@ block content
     small.text-muted: p createdAt : #{user.createdAt}
     if(user.updatedAt)
       small.text-muted: p updatedAt : #{user.updatedAt}
-    a(class="btn btn-primary" href="/") Back
+    a.btn(href="/") Back
     -if(isAuthenticated && currentUser._id.toString() == user._id.toString())
-      a(class="btn btn-primary" href=`/users/${user._id}/edit`) Edit
+      a.btn(href=`/users/${user._id}/edit`) Edit

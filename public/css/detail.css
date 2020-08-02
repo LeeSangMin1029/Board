@@ -1,0 +1,32 @@
+.comment-line {
+  border-top: 1px solid #d3d3d3;
+  padding: 0px 15px 0px 15px;
+  margin: 0px 0px 0px 0px;
+}
+
+.text {
+  padding: 0px 0px 0px 0px;
+  margin: 0px;
+}
+
+.date {
+  text-align: right;
+  color: #a9a9a9;
+}
+
+.title {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 600;
+  margin: 0px 0px 10px 0px;
+}
+
+.post-header {
+  border-bottom: 1px solid #d3d3d3;
+  margin: 0px 0px 10px 0px;
+  padding: 20px;
+}
+
+.post-body {
+  padding: 20px 20px 20px 20px;
+}
