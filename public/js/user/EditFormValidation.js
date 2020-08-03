@@ -9,7 +9,6 @@
       const path = `/users/${window.location.pathname.split("/")[2]}`;
       const { errors, redirect } = await getData(path, formdata, "PUT");
       if (typeof errors === "undefined" && redirect) {
-        console.log("sdsdf");
         window.location.replace("/users");
       } else {
         validateForm(formdata, "user edit", errors);

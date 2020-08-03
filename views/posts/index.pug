@@ -17,7 +17,8 @@ block content
           th(scope="col") Author
           th(scope="col") CreatedAt
       +tablebody(posts)
-    +pagination()
+    - if(count)
+      +pagination()
     - if(isAuthenticated)
       a.btn(href="/posts/new") New
 

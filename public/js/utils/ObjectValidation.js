@@ -19,7 +19,6 @@ function isEmpty(value) {
   }
 
   if (Object.keys(value).length === 0 && value.constructor === Object) {
-    console.log(value);
     return true;
   }
 
