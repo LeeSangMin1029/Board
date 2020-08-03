@@ -117,9 +117,11 @@ const updatePost = util.asyncWrap(async (req, res) => {
 // 글을 실제 DB에서 삭제하는 함수
 const deletePost = util.asyncWrap(async (req, res) => {
   try {
-    await Post.findOneAndDelete({ _id: req.params.id });
+    await Post.findOneAndRemove({ _id: req.params.id });
+    await Comment.deleteMany({ post: { $in: req.params.id } });
     return res.json({ redirect: true });
   } catch (err) {
+    console.log(err);
     return res.send(err);
   }
 });
@@ -150,7 +152,8 @@ function getPostArray(posts) {
 const checkPermission = util.asyncWrap(async (req, res, next) => {
   try {
     const post = await Post.findOne({ _id: req.params.id });
-    if (post.author != req.user._id) return util.noPermission(req, res);
+    if (post.author.toString() != req.user._id.toString())
+      return util.noPermission(req, res);
     next();
   } catch (err) {
     console.log(err);

@@ -56,11 +56,7 @@ const updateUser = util.asyncWrap(async (req, res) => {
     );
     user.originalPassword = user.password;
     user.password = req.body.newPassword ? req.body.newPassword : user.password;
-    for (const p in req.body) {
-      console.log(p);
-      user[p] = req.body[p];
-    }
-    console.log(user);
+    for (const p in req.body) user[p] = req.body[p];
     await user.save();
     return res.json({ redirect: true });
   } catch (err) {
