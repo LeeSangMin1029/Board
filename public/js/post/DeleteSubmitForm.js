@@ -6,7 +6,7 @@
     try {
       if (confirm("Are you sure you want to delete this post?")) {
         const wholePath = window.location.pathname.split("/");
-        const path = `/posts/${wholePath[2]}`;
+        const path = `/posts/${wholePath[2]}?_method=delete`;
         const { redirect } = await getData(path, "", "DELETE");
         if (redirect) {
           window.location.href = "/posts";
