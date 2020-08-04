@@ -46,9 +46,13 @@ const getPaginatedPosts = util.asyncWrap(async (req, res) => {
     const posts = getPostArray(
       await Post.find()
         .skip(startIndex)
+        .limit(limit)
         .sort("-createdAt")
         .lean()
-        .populate({ path: "author", options: { lean: true, limit: limit } })
+        .populate({
+          path: "author",
+          options: { lean: true },
+        })
     );
     const postLength = await Post.countDocuments();
     const pageCount = util.getPageCount(postLength, limit);
@@ -92,7 +96,7 @@ const renderPost = util.asyncWrap(async (req, res) => {
       date: payload.updatedAt,
       formatString: "YYYY-MM-DD HH:mm:ss",
     });
-    return res.render("posts/post", { post: payload, comments: comments });
+    return res.render("posts/show", { post: payload, comments: comments });
   } catch (err) {
     return res.send(err);
   }

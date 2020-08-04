@@ -29,8 +29,8 @@ function renderErrorMsg(err) {
 function renderPosts(posts) {
   let result = "";
   for (const post of posts) {
-    result += `<tr><td><a href="/posts/${post._id}">${post.title}</a></td>
-      <td>${post.body}</td>
+    result += `<tr><td><a href="/posts/${post._id}" class="txt-hidden">${post.title}</a></td>
+      <td>${post.author.name}</td>
       <td>${post.createdAt}</td></tr>`;
   }
   document.getElementById("tbody-posts").innerHTML = result;
