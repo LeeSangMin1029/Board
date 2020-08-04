@@ -11,23 +11,23 @@ block content
       fieldset
         .pw.current-area
           label(for="currentPw")
-            h4 Current Password*
+            h4 current password*
           +userInputTag("input", "currentPw", "currentPassword", "uit currentPassword", "current password", "password")
         .name-area
           label(for="name")
-            h4 Name
+            h4 name
           +userInputTag("input", "name", "name", "uit name", "name")(value=user.name)
         .id-area
           label(for="id")
-            h4 Id
+            h4 id
           +userInputTag("input", "id", "id", "uit id", "id")(value=user.id)
         .pw.new-area
           label(for="pw-new")
-            h4 New Password
+            h4 new password
           +userInputTag("input", "pw-new", "newPassword", "uit pw", "new password", "password")
         .pw.confirm-area
           label(for="pw-confirm")
-            h4 Password Confirmation
+            h4 password confirmation
           +userInputTag("input", "pw-confirm", "passwordConfirmation", "uit pw", "confirm password", "password")
         a.btn(href=`/users/${ user._id }`) Back
-        button.btn(type="submit") Update
+        button.btn(type="submit" style="margin-left:10px;") Update
