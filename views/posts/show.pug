@@ -12,17 +12,16 @@ block content
   .main-container
     .post-header
       .title #{post.title}
-      .info
-        p.text #{post.author.name}
-        small: p.text createdAt : #{post.createdAt}
-        if(post.updatedAt)
-          small: p.text updatedAt : #{post.updatedAt}
+      p.text #{post.author.name}
+      small: p.text createdAt : #{post.createdAt}
+      if(post.updatedAt)
+        small: p.text updatedAt : #{post.updatedAt}
     .post-body
       .post-contents #{post.body}
     .post-footer
       a.btn(href="/posts") Back
       - if(isAuthenticated && post.author && currentUser._id.toString() === post.author._id.toString())
-        form(method="POST" style="display:inline"): button.btn(type="submit" style="margin: 0px 10px 0px 10px") Delete
+        form(method="POST" style="display:inline"): button.btn.mlr(type="submit") Delete
         a.btn(href=`/posts/${post._id}/edit`) Edit
     h4 comments
     form(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
@@ -30,12 +29,17 @@ block content
         fieldset
           .text-area
             +userInputTag("textarea", "", "text", "uit text", "comments")
-            button.btn(type="submit" style="margin-top: 10px;") Add Comment
+            button.btn.mt(type="submit") Add Comment
       - else
         fieldset(disabled)
     - if(comments.length)
-      each comment in comments
-        .comment-line
-          p.text= `${comment.text}`
-          p.text= `${comment.author.name}`
-          p.text.date= `${comment.createdAt}`
+      .wrap-comments
+        each comment in comments
+          .comment-line
+            .header-author
+              a#author-text(href=`/users/${comment.author._id}`)= `${comment.author.name}`
+              - if(comment.updatedAt === undefined)
+                p.published-time= `${comment.createdAt}`
+              - else  
+                p.published-time= `${comment.createdAt}(수정됨)`
+            p.comment-contents= `${comment.text}`

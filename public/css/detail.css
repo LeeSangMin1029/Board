@@ -1,17 +1,19 @@
 .comment-line {
-  border-top: 1px solid #d3d3d3;
+  border-bottom: 1px solid #d3d3d3;
   padding: 0px 15px 0px 15px;
-  margin: 0px 0px 0px 0px;
+  margin-bottom: 15px;
+}
+
+.comment-contents {
+  width: 100%;
+  padding: 4px 10px 0px 10px;
+  margin-bottom: 10px;
+  word-break: break-all;
 }
 
 .text {
   padding: 0px 0px 0px 0px;
   margin: 0px;
-}
-
-.date {
-  text-align: right;
-  color: #a9a9a9;
 }
 
 .title {
@@ -42,4 +44,23 @@
   width: 100%;
   margin: 10px 0px 10px 0px;
   display: inline-block;
+}
+
+.header-author {
+}
+
+#author-text {
+  color: black;
+}
+
+#author-text {
+  display: inline;
+  margin-right: 5px;
+  font-size: 1.2rem;
+}
+
+.published-time {
+  display: inline;
+  text-align: right;
+  color: #a9a9a9;
 }
