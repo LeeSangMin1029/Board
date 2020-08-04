@@ -25,11 +25,7 @@ const errorHandler = (errors) => {
 };
 
 const dateFormatting = ({ date, formatString }) => {
-  if (date) {
-    return moment(date).format(formatString);
-  } else {
-    return "";
-  }
+  return moment(date).format(formatString);
 };
 
 const getPageCount = (postLength, limit) => {
