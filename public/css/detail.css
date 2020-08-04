@@ -72,7 +72,13 @@
 #comment-body {
 }
 
-#action-edit {
+#action-delete:hover,
+#action-edit:hover {
+  cursor: pointer;
+}
+
+#action-edit,
+#action-delete {
 }
 
 #action {
