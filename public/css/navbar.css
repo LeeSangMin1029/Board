@@ -49,10 +49,6 @@
 }
 
 .navbar-href {
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  padding-top: 0.5rem;
-  padding-right: 1rem;
-  padding-bottom: 0.5rem;
-  padding-left: 1rem;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
 }
