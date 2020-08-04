@@ -129,6 +129,19 @@ fieldset {
   cursor: pointer;
 }
 
+.ml {
+  margin-left: 10px;
+}
+
+.mt {
+  margin-top: 10px;
+}
+
+.mlr {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .txt-hidden {
   width: 70px;
   padding: 0 5px;

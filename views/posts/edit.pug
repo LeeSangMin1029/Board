@@ -17,5 +17,5 @@ block content
           label(for="body")
             h4 Body
           +userInputTag("textarea", "body", "postBody", "uit body", "body")= post.body
-        button.btn(type="submit") Edit
         a.btn(href=`/posts/${ post._id }`) Back
+        button.btn.ml(type="submit") Edit

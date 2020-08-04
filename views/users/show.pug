@@ -10,4 +10,4 @@ block content
       small.text-muted: p updatedAt : #{user.updatedAt}
     a.btn(href="/") Back
     -if(isAuthenticated && currentUser._id.toString() == user._id.toString())
-      a.btn(href=`/users/${user._id}/edit` style="margin-left:10px") Edit
+      a.btn.ml(href=`/users/${user._id}/edit`) Edit
