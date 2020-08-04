@@ -1,10 +1,14 @@
-.comment-line {
+#comment {
   border-bottom: 1px solid #d3d3d3;
   padding: 0px 15px 0px 15px;
   margin-bottom: 15px;
 }
 
-.comment-contents {
+#comment-contents {
+  display: block;
+}
+
+#comment-text {
   width: 100%;
   padding: 4px 10px 0px 10px;
   margin-bottom: 10px;
@@ -12,7 +16,7 @@
 }
 
 .text {
-  padding: 0px 0px 0px 0px;
+  padding: 0px;
   margin: 0px;
 }
 
@@ -23,30 +27,30 @@
   margin: 0px 0px 10px 0px;
 }
 
-.post-header {
+#post-header {
   border-bottom: 1px solid #d3d3d3;
   margin: 0px 0px 10px 0px;
   padding: 20px;
 }
 
-.post-body {
-  padding: 20px 20px 20px 20px;
+#post-body {
+  padding: 20px;
 }
 
-.post-contents {
+#post-contents {
   width: 100%;
   padding: 0px 10px 10px 10px;
   margin-bottom: 10px;
   word-break: break-all;
 }
 
-.post-footer {
+#post-footer {
   width: 100%;
   margin: 10px 0px 10px 0px;
   display: inline-block;
 }
 
-.header-author {
+#header-author {
 }
 
 #author-text {
@@ -63,4 +67,14 @@
   display: inline;
   text-align: right;
   color: #a9a9a9;
+}
+
+#comment-body {
+}
+
+#action-edit {
+}
+
+#action {
+  display: inline-block;
 }
