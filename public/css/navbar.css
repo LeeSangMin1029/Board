@@ -13,7 +13,8 @@
 }
 
 .navbar-right {
-  float: right;
+  right: 0;
+  position: absolute;
 }
 
 .navbar-logo:hover {

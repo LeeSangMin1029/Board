@@ -2,10 +2,10 @@ nav.navbar-root
   a.navbar-logo(href="/") Board
   ul.navbar-ul
     li.navbar-li: a.navbar-href(href="/posts") board
-    .navbar-right
-      - if(isAuthenticated)
-        li.navbar-li: a.navbar-href(href="/logout") Logout
-        li.navbar-li: a.navbar-href(href=`/users/${currentUser._id}`) My Account
-      - else
-        li.navbar-li: a.navbar-href(href="/users/register") Sign up
-        li.navbar-li: a.navbar-href(href="/login") Sign in
+  ul.navbar-ul.navbar-right
+    - if(isAuthenticated)
+      li.navbar-li: a.navbar-href(href="/logout") Logout
+      li.navbar-li: a.navbar-href(href=`/users/${currentUser._id}`) My Account
+    - else
+      li.navbar-li: a.navbar-href(href="/users/register") Sign up
+      li.navbar-li: a.navbar-href(href="/login") Sign in

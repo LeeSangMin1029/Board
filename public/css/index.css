@@ -1,3 +1,98 @@
+dl,
+ol,
+ul {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: #007bff;
+  background-color: transparent;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+h4 {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  font-size: 1.5rem;
+}
+
+.small,
+small {
+  font-size: 80%;
+  font-weight: 400;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+th,
+td {
+  text-align: inherit;
+  height: inherit;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  padding: 10px 7px 10px 7px;
+}
+
+td {
+  padding: 8px 7px 8px 7px;
+}
+
+button,
+input {
+  overflow: visible;
+}
+
+button,
+input,
+textarea {
+  margin: 0;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: left;
+}
+
 .main-container {
   max-width: 1200px;
   width: 100%;
@@ -5,6 +100,13 @@
   margin-left: auto;
   margin-right: auto;
   font-family: "Titillium Web", sans-serif;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
 }
 
 .btn {
@@ -21,4 +123,16 @@
 .btn:hover {
   background-color: black;
   color: #e7e7e7;
+}
+
+.btn:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+
+.txt-hidden {
+  width: 70px;
+  padding: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

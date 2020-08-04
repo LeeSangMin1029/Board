@@ -21,9 +21,7 @@
   border-right: rgb(255, 255, 255) solid 1px;
   border-bottom: rgb(255, 255, 255) solid 1px;
   border-left: rgb(255, 255, 255) solid 1px;
-
   background-color: white;
-
   letter-spacing: -1px;
   vertical-align: top;
   font-style: normal;
@@ -39,6 +37,7 @@
   border-bottom: rgb(224, 224, 224) solid 1px;
   border-left: rgb(224, 224, 224) solid 1px;
   color: #00c73c;
+  cursor: pointer;
 }
 
 .paginate button:active {
