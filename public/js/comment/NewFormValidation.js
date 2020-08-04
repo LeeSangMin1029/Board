@@ -1,8 +1,7 @@
 (async function () {
   const { getData } = await import("../required/Request.js");
   const { validateForm } = await import("../utils/FormValidation.js");
-  const form = document.querySelectorAll("form")[1];
-
+  const form = document.querySelector("form#create");
   if (typeof form === "undefined") {
     return 0;
   } else {
