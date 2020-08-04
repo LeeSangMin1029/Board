@@ -2,7 +2,6 @@ import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import * as util from "../utils.js";
 
-// 사용자가 글을 생성할 수 있는 폼을 가진 페이지를 그려준다
 const renderNewPost = (req, res) => {
   try {
     return res.render("posts/new");
@@ -11,7 +10,6 @@ const renderNewPost = (req, res) => {
   }
 };
 
-// 사용자가 글을 수정가능한 페이지를 그려준다.
 const renderEditPost = util.asyncWrap(async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id }).lean();
@@ -21,9 +19,6 @@ const renderEditPost = util.asyncWrap(async (req, res) => {
   }
 });
 
-// 글을 생성하는데 필요한 요소를 입력하고 Create
-// 버튼을 눌렀을 때 실행되는 함수이다. DB에 실제로
-// 사용자가 넣은 정보들이 저장되고, 글 목록을 보여주는 페이지로 이동
 const createPost = util.asyncWrap(async (req, res) => {
   try {
     const post = new Post({
@@ -77,7 +72,6 @@ const rePaginatedPosts = (req, res) => {
   return res.redirect("/posts/page/1");
 };
 
-// 글의 상세 페이지를 찾아서 출력
 const renderPost = util.asyncWrap(async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id })
@@ -87,16 +81,11 @@ const renderPost = util.asyncWrap(async (req, res) => {
       .sort("createdAt")
       .lean()
       .populate({ path: "author", select: "name", options: { lean: true } });
-    const payload = { ...post };
-    payload.createdAt = util.dateFormatting({
-      date: payload.createdAt,
-      formatString: "YYYY-MM-DD HH:mm:ss",
+    const result = getPostWithComments(comments, post);
+    return res.render("posts/show", {
+      post: result.post,
+      comments: result.comments,
     });
-    payload.updatedAt = util.dateFormatting({
-      date: payload.updatedAt,
-      formatString: "YYYY-MM-DD HH:mm:ss",
-    });
-    return res.render("posts/show", { post: payload, comments: comments });
   } catch (err) {
     return res.send(err);
   }
@@ -118,7 +107,6 @@ const updatePost = util.asyncWrap(async (req, res) => {
   }
 });
 
-// 글을 실제 DB에서 삭제하는 함수
 const deletePost = util.asyncWrap(async (req, res) => {
   try {
     await Post.findOneAndRemove({ _id: req.params.id });
@@ -144,13 +132,46 @@ export {
 
 function getPostArray(posts) {
   return [...posts].map((post) => {
-    // 생성일 Formmating
-    post.createdAt = util.dateFormatting({
-      date: post.createdAt,
-      formatString: "YYYY-MM-DD",
-    });
-    return post;
+    return getPost(post, "YYYY-MM-DD");
   });
+}
+
+function getCommentArray(comments, format) {
+  return [...comments].map((comment) => {
+    comment.createdAt = util.dateFormatting({
+      date: comment.createdAt,
+      formatString: format,
+    });
+    if (typeof comment.updatedAt !== "undefined") {
+      comment.updatedAt = util.dateFormatting({
+        date: comment.updatedAt,
+        formatString: format,
+      });
+    }
+    return comment;
+  });
+}
+
+function getPostWithComments(comments, post) {
+  const format = "YYYY-MM-DD HH:mm:ss";
+  const result = {};
+  result.post = getPost(post, format);
+  result.comments = getCommentArray(comments, format);
+  return result;
+}
+
+function getPost(post, format) {
+  post.createdAt = util.dateFormatting({
+    date: post.createdAt,
+    formatString: format,
+  });
+  if (typeof post.updatedAt !== "undefined") {
+    post.updatedAt = util.dateFormatting({
+      date: post.updatedAt,
+      formatString: format,
+    });
+  }
+  return post;
 }
 
 const checkPermission = util.asyncWrap(async (req, res, next) => {
