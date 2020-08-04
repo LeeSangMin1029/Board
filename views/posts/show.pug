@@ -51,7 +51,7 @@ block content
                   a#action-delete.ml delete
             #comment-edit(hidden)
               form(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
-              - if(isAuthenticated)
+              - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
                 fieldset
                   .text-area
                     +userInputTag("textarea", "", "text", "uit text", "comments")
