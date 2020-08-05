@@ -16,7 +16,23 @@ const createComment = util.asyncWrap(async (req, res) => {
   }
 });
 
-export { createComment, checkPostId };
+const updateComment = util.asyncWrap(async (req, res) => {
+  try {
+    const payload = {
+      text: req.body.text,
+      author: req.user._id,
+      post: res.locals.post._id,
+      updatedAt: Date.now(),
+    };
+    await Comment.updateOne({ _id: req.params.object_id }, payload, {
+      runValidators: true,
+    });
+    return res.json({ redirect: true });
+  } catch (err) {
+    console.log(err);
+    return res.json({ errors: util.errorHandler(err) });
+  }
+});
 
 const checkPostId = util.asyncWrap(async (req, res, next) => {
   try {
@@ -26,3 +42,5 @@ const checkPostId = util.asyncWrap(async (req, res, next) => {
     next(err);
   }
 });
+
+export { createComment, checkPostId, updateComment };
