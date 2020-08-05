@@ -82,6 +82,12 @@ function getComment() {
         dbFieldName: "text",
       },
     },
+    edit: {
+      text: {
+        class: "text",
+        dbFieldName: "text",
+      },
+    },
   };
 }
 
