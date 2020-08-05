@@ -52,10 +52,11 @@ block content
                   a#action-delete.ml delete
             #comment-edit(hidden)
               - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
-                form#edit(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
+                form#edit(method="POST" enctype="multipart/form-data" novalidate
+                          data-post-id=`${post._id}` data-comment-id=`${comment._id}`)
                   fieldset
                     .text-area
-                      +userInputTag("textarea", "", "text", "uit text", "comments")
+                      +userInputTag("textarea", "", "text", "uit text", "comments")= comment.text
                       button.btn#edit-cancel Cancel
                       button.btn.mtl(type="submit") Edit Comment
               - else
