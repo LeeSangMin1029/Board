@@ -1,4 +1,4 @@
-import { addEvent, getDoc } from "../utils/AddDocumentsEvent.js";
+import { addEvent } from "../utils/AddDocumentsEvent.js";
 import { getData } from "../required/Request.js";
 import { isEmpty } from "../utils/ObjectValidation.js";
 
@@ -49,32 +49,47 @@ const btnCallFn = (e, doc) => {
 const formCallFn = async (e, doc) => {
   e.preventDefault();
   try {
-    console.log("hello");
     const formdata = new FormData(doc);
     formdata.append("post_id", doc.dataset.postId);
-    // const { errors, redirect } = await getData(
-    //   `/comment/${doc.dataset.commentId}`,
-    //   formdata,
-    //   "PUT"
-    // );
+    const { errors, redirect } = await getData(
+      `/comment/${doc.dataset.commentId}`,
+      formdata,
+      "PUT"
+    );
+    console.log(errors, redirect);
   } catch (err) {
     console.log(err);
   }
 };
 
-(async function () {
-  const { events } = getEvents();
-
-  // 값 변경시 발생하는 이벤트
-  addEvent(".uit", events.input, true);
-  // 토글 기능 수행
-  addEvent("#action-edit, #edit-cancel", events.toggleBtn, true);
-  // 각 form에 대한 submit 이벤트
-  addEvent("form#comment", events.formSubmit, true);
-
-  // 페이지 초기에 button을 비활성화
+function initButtonsDisabled() {
   const btns = document.querySelectorAll("#clickable");
   btns.forEach((btn) => {
     btn.disabled = true;
   });
+}
+
+function formAddSubmit() {
+  const form = document.querySelector("#comment-add form#comment");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+      const formdata = new FormData(form);
+      formdata.append("post_id", form.dataset.postId);
+      const { getData } = await import("../required/Request.js");
+      const { error, redirect } = await getData("/comment", formdata, "POST");
+      console.log(error, redirect);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+}
+
+(async function () {
+  const { events } = getEvents();
+  initButtonsDisabled();
+  formAddSubmit();
+  addEvent(".uit", events.input, true);
+  addEvent("#action-edit, #edit-cancel", events.toggleBtn, true);
+  addEvent("#comment-edit form#comment", events.formSubmit, true);
 })();
