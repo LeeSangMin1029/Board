@@ -49,7 +49,7 @@ const formCallFn = async (e, doc) => {
 
 (async function () {
   const { input, btn, form } = getEvents();
-  const { addEvent } = await import("../utils/FormValidation.js");
+  const { addEvent } = await import("../utils/AddDocumentsEvent.js");
   addEvent(".uit", input, true);
   addEvent("#action-edit, #edit-cancel", btn, true);
   addEvent("form#edit", form, true);
