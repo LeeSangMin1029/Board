@@ -4,10 +4,9 @@ import * as util from "../utils.js";
 
 const createComment = util.asyncWrap(async (req, res) => {
   try {
-    const post = res.locals.post;
     const payload = { ...req.body };
     payload.author = req.user._id;
-    payload.post = post._id;
+    payload.post = res.locals.post._id;
     await Comment.create(payload);
     return res.json({ redirect: true });
   } catch (err) {
