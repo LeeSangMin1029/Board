@@ -1,4 +1,3 @@
-// Document 전달 함수
 // attribute default value === "id"
 function getDoc(selector, isAll = false) {
   return isAll
@@ -6,7 +5,6 @@ function getDoc(selector, isAll = false) {
     : document.querySelector(selector);
 }
 
-// input, textarea 값 변경 감지 함수
 function addEvent(selector, events, isAll) {
   try {
     const docs = getDoc(selector, isAll);
@@ -26,8 +24,10 @@ function executeNodeEvents(docs, { eventList, callFn }) {
       });
     });
   } else {
-    docs.addEventListener(eventList, callFn);
+    docs.addEventListener(eventList, (evt) => {
+      callFn(evt, docs);
+    });
   }
 }
 
-export { addEvent };
+export { addEvent, getDoc };

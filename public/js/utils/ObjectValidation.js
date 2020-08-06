@@ -18,10 +18,10 @@ function isEmpty(value) {
     return true;
   }
 
-  if (Object.keys(value).length === 0 && value.constructor === Object) {
+  if (Object.keys(value).length === 0 && value.constructor === Object)
     return true;
-  }
 
+  if (Array.isArray(value) && !value.length) return true;
   return false;
 }
 
