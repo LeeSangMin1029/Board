@@ -1,16 +1,18 @@
 function getEvents() {
   return {
-    input: {
-      eventList: ["keyup", "paste", "input", "propertychange"],
-      callFn: inputCallFn,
-    },
-    btn: {
-      eventList: ["click"],
-      callFn: btnCallFn,
-    },
-    form: {
-      eventList: ["submit"],
-      callFn: formCallFn,
+    events: {
+      input: {
+        eventList: ["keyup", "paste", "input", "propertychange"],
+        callFn: inputCallFn,
+      },
+      btn: {
+        eventList: ["click"],
+        callFn: btnCallFn,
+      },
+      form: {
+        eventList: ["submit"],
+        callFn: formCallFn,
+      },
     },
   };
 }
@@ -48,9 +50,9 @@ const formCallFn = async (e, doc) => {
 };
 
 (async function () {
-  const { input, btn, form } = getEvents();
+  const { events } = getEvents();
   const { addEvent } = await import("../utils/AddDocumentsEvent.js");
-  addEvent(".uit", input, true);
-  addEvent("#action-edit, #edit-cancel", btn, true);
-  addEvent("form#edit", form, true);
+  addEvent(".uit", events.input, true);
+  addEvent("#action-edit, #edit-cancel", events.btn, true);
+  addEvent("form#edit", events.form, true);
 })();
