@@ -1,15 +1,19 @@
+import { addEvent, getDoc } from "../utils/AddDocumentsEvent.js";
+import { getData } from "../required/Request.js";
+import { isEmpty } from "../utils/ObjectValidation.js";
+
 function getEvents() {
   return {
     events: {
       input: {
-        eventList: ["keyup", "paste", "input", "propertychange"],
+        eventList: ["paste", "input", "propertychange"],
         callFn: inputCallFn,
       },
-      btn: {
+      toggleBtn: {
         eventList: ["click"],
         callFn: btnCallFn,
       },
-      form: {
+      formSubmit: {
         eventList: ["submit"],
         callFn: formCallFn,
       },
@@ -18,15 +22,24 @@ function getEvents() {
 }
 
 const inputCallFn = (e, doc) => {
-  const initalValue = doc.innerHTML;
-  if (initalValue == doc.innerHTML) {
-    console.log(doc.innerHTML);
+  const curValue = e.target.value;
+  const initialValue = e.target.defaultValue;
+  const btn = doc.closest("div.text-area").querySelector("#clickable");
+  // 현재 값이 비어있을 때
+  if (isEmpty(curValue)) {
+    btn.disabled = true;
+  }
+  // 초기 값이 현재 값과 같을 때
+  else if (initialValue === curValue) {
+    btn.disabled = true;
+  } else {
+    btn.disabled = false;
   }
 };
 
 const btnCallFn = (e, doc) => {
   e.preventDefault();
-  const comment = doc.closest("#comment");
+  const comment = doc.closest("div#comment");
   let toggleHidden = comment.querySelector("#comment-edit");
   toggleHidden.hidden = toggleHidden.hidden ? false : true;
   toggleHidden = comment.querySelector("#comment-body");
@@ -34,7 +47,6 @@ const btnCallFn = (e, doc) => {
 };
 
 const formCallFn = async (e, doc) => {
-  const { getData } = await import("../required/Request.js");
   e.preventDefault();
   try {
     const formdata = new FormData(doc);
@@ -51,8 +63,17 @@ const formCallFn = async (e, doc) => {
 
 (async function () {
   const { events } = getEvents();
-  const { addEvent } = await import("../utils/AddDocumentsEvent.js");
+
+  // 값 변경시 발생하는 이벤트
   addEvent(".uit", events.input, true);
-  addEvent("#action-edit, #edit-cancel", events.btn, true);
-  addEvent("form#edit", events.form, true);
+  // 토글 기능 수행
+  addEvent("#action-edit, #edit-cancel", events.toggleBtn, true);
+  // 각 form에 대한 submit 이벤트
+  addEvent("form#comment", events.formSubmit, true);
+
+  // 페이지 초기에 button을 비활성화
+  const btns = document.querySelectorAll("#clickable");
+  btns.forEach((btn) => {
+    btn.disabled = true;
+  });
 })();
