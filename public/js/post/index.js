@@ -15,7 +15,11 @@ function getEvents() {
       },
       formSubmit: {
         eventList: ["submit"],
-        callFn: formCallFn,
+        callFn: formEditCallFn,
+      },
+      deleteComment: {
+        eventList: ["click"],
+        callFn: deleteCommentBtnCallFn,
       },
     },
   };
@@ -46,7 +50,7 @@ const btnCallFn = (e, doc) => {
   toggleHidden.hidden = toggleHidden.hidden ? false : true;
 };
 
-const formCallFn = async (e, doc) => {
+const formEditCallFn = async (e, doc) => {
   e.preventDefault();
   try {
     const formdata = new FormData(doc);
@@ -56,7 +60,32 @@ const formCallFn = async (e, doc) => {
       formdata,
       "PUT"
     );
-    console.log(errors, redirect);
+    if (typeof errors === "undefined" && redirect) {
+      window.location.href = e.target.action;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteCommentBtnCallFn = async (e, doc) => {
+  e.preventDefault();
+  try {
+    if (confirm("Are you sure you want to delete this comment?")) {
+      const form = doc.closest("form#comment");
+      const path = `/comment/${form.dataset.commentId}`;
+      const result = await fetch(path, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (result.ok) {
+        console.log(await result.json());
+      } else {
+        console.log(result.status);
+      }
+    }
   } catch (err) {
     console.log(err);
   }
@@ -91,5 +120,6 @@ function formAddSubmit() {
   formAddSubmit();
   addEvent(".uit", events.input, true);
   addEvent("#action-edit, #edit-cancel", events.toggleBtn, true);
+  addEvent("#action-delete", events.deleteComment, true);
   addEvent("#comment-edit form#comment", events.formSubmit, true);
 })();
