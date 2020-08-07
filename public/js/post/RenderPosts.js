@@ -1,5 +1,5 @@
 window.addEventListener("popstate", function () {
-  const page = this.location.pathname.split("/")[3];
+  const page = this.location.pathname.split("/")[2];
   document
     .getElementsByClassName("current-page")[0]
     .classList.remove("current-page");
@@ -17,10 +17,27 @@ document.querySelectorAll(".page").forEach((btn) => {
       currentPage[0].classList.remove("current-page");
       this.classList.add("current-page");
       await getPosts(page);
-      history.pushState(null, null, `/posts/page/${page}`);
+      history.pushState(null, null, `/posts/${page}`);
     }
   });
 });
+
+// const form = document.querySelector("form");
+// form.addEventListener("submit", async (e) => {
+//   e.preventDefault();
+//   try {
+//     console.log("submit");
+//     const formdata = new FormData(form);
+//     const result = await fetch("/posts", { method: "GET" });
+//     if (result.ok) {
+//       console.log("success");
+//     } else {
+//       console.log("failed", result.status);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 function renderErrorMsg(err) {
   document.getElementById("tbody-posts").innerHTML = `<tr>${err}</tr>`;
@@ -40,7 +57,7 @@ async function getPosts(page) {
   try {
     const { isEmptyArray } = await import("../utils/ObjectValidation.js");
     const { getData } = await import("../required/Request.js");
-    const { posts } = await getData(`/posts/page/${page}`);
+    const { posts } = await getData(`/posts/${page}`);
     if (isEmptyArray(posts)) {
       renderErrorMsg(`There are no posts please create it`);
     } else {

@@ -7,10 +7,12 @@ const upload = multer();
 
 posts
   .route("/")
-  .get(postsCtrl.rePaginatedPosts)
+  .get(postsCtrl.getQueryString, postsCtrl.renderPosts)
   .post(util.isLogged, upload.none(), postsCtrl.createPost);
 
-posts.route("/page/:page").get(postsCtrl.getPaginatedPosts);
+posts
+  .route("/:page")
+  .get(postsCtrl.getQueryString, postsCtrl.getPaginatedPosts);
 
 posts.get("/new", util.isLogged, postsCtrl.renderNewPost);
 
