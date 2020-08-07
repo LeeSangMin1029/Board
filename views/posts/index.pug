@@ -1,4 +1,5 @@
 extends ../components/partial/layout.pug
+include ../components/form/formChildNode.pug
 
 block append style
   link(rel="stylesheet" type="text/css" href="/static/css/paginate.css")
@@ -8,7 +9,14 @@ block append head
 
 block content
   .main-container
-    h4 Board
+    #index-header
+      h4 Board
+      #search-contents
+        label(for="serachText"): h4 search
+        form(method="POST")
+          fieldset
+            +userInputTag("input", "serachText", "searchText", "uit", "input text")
+            button.btn(type="submit") search
     table
       thead
         tr
@@ -26,11 +34,11 @@ block content
 mixin pagination()
   div.paginate: div.page-wrap
     - for (let i = 1; i <= count; i++)
-      - if(page==i)
-        button.page.current-page(href=`/posts/page${i}`)
+      - if(currentPage==i)
+        button.page.current-page(href=`/posts/page/${i}`)
           em.num-page= i
       - else
-        button.page(href=`/posts/page${i}`)
+        button.page(href=`/posts/page/${i}`)
           em.num-page= i
 
 mixin tablebody(posts)

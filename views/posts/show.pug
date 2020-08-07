@@ -28,7 +28,7 @@ block content
         - if(isAuthenticated)
           fieldset
             .text-area
-              +userInputTag("textarea", "", "text", "uit text", "comments")
+              +userInputTag("textarea", "", "text", "uit", "comments")
               button#clickable.btn.mt(type="submit") Add Comment
         - else
           fieldset(disabled)
@@ -57,7 +57,7 @@ block content
                           data-post-id=`${post._id}` data-comment-id=`${comment._id}`)
                   fieldset
                     .text-area
-                      +userInputTag("textarea", "", "text", "uit text", "comments")= comment.text
+                      +userInputTag("textarea", "", "text", "uit", "comments")= comment.text
                       button.btn#edit-cancel Cancel
                       button#clickable.btn.mtl(type="submit") Edit Comment
               - else

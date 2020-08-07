@@ -2,7 +2,7 @@ extends ../components/partial/layout.pug
 include ../components/form/formChildNode.pug
 
 block append head
-  script(defer type="module" src="/static/js/post/NewFormValidation.js")
+  script(defer type="module" src="/static/js/post/New.js")
 
 block content
   .main-container
@@ -12,10 +12,10 @@ block content
         .title-area
           label(for="title")
             h4 Title
-          +userInputTag("input", "title", "postTitle", "uit title", "title")
+          +userInputTag("input", "title", "postTitle", "uit", "title")
         .body-area
           label(for="body")
             h4 Body
-          +userInputTag("textarea", "body", "postBody", "uit body", "body")
+          +userInputTag("textarea", "body", "postBody", "uit", "body")
         a.btn(href="/posts") Back
         button.btn.ml Create
