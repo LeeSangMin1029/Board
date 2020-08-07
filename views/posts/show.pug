@@ -48,7 +48,9 @@ block content
               - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
                 #action
                   a#action-edit edit
-                  a#action-delete.ml delete
+                  #comment-destroy
+                    form#comment(mehtod="POST" enctype="multipart/form-data" data-comment-id=`${comment._id}`)
+                      a#action-delete.ml delete
             #comment-edit(hidden)
               - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
                 form#comment(method="POST" enctype="multipart/form-data" novalidate
