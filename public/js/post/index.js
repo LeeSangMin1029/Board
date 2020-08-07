@@ -80,8 +80,8 @@ const deleteCommentBtnCallFn = async (e, doc) => {
           "Content-Type": "application/json",
         },
       });
-      if (result.ok) {
-        console.log(await result.json());
+      if (result.ok && (await result.json())) {
+        window.location.href = window.location;
       } else {
         console.log(result.status);
       }
