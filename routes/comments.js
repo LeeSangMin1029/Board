@@ -13,12 +13,14 @@ comments.post(
   commentCtrl.createComment
 );
 
-comments.put(
-  "/:object_id",
-  util.isLogged,
-  upload.none(),
-  commentCtrl.checkPostId,
-  commentCtrl.updateComment
-);
+comments
+  .route("/:object_id")
+  .put(
+    util.isLogged,
+    upload.none(),
+    commentCtrl.checkPostId,
+    commentCtrl.updateComment
+  )
+  .delete(util.isLogged, commentCtrl.destoryComment);
 
 export default comments;

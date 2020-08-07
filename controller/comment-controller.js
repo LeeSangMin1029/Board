@@ -33,6 +33,15 @@ const updateComment = util.asyncWrap(async (req, res) => {
   }
 });
 
+const destoryComment = util.asyncWrap(async (req, res) => {
+  try {
+    await Comment.deleteOne({ _id: req.params.object_id });
+    return res.json({ redirect: true });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 const checkPostId = util.asyncWrap(async (req, res, next) => {
   try {
     res.locals.post = await Post.findOne({ _id: req.body.post_id });
@@ -42,4 +51,4 @@ const checkPostId = util.asyncWrap(async (req, res, next) => {
   }
 });
 
-export { createComment, checkPostId, updateComment };
+export { createComment, checkPostId, updateComment, destoryComment };
