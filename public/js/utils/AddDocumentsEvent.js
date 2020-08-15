@@ -1,33 +1,133 @@
-// attribute default value === "id"
-function getDoc(selector, isAll = false) {
-  return isAll
-    ? document.querySelectorAll(selector)
-    : document.querySelector(selector);
+import { isEmpty } from "./ObjectValidation.js";
+
+/*
+  error status :
+  failed : 1000
+  succeded : -1
+*/
+function exceptionError(object) {
+  const status = {};
+  const isObj = !isEmpty(object);
+  let resultObject, code;
+  if (isObj) {
+    resultObject = object;
+    code = 1000;
+  } else {
+    status.errorMessage = new Error("Object does not exist").stack.split(
+      "\n"
+    )[0];
+    resultObject = undefined;
+    code = -1;
+  }
+  status.code = code;
+  return { status: status, object: resultObject };
 }
 
-function addEvent(selector, events, isAll) {
-  try {
-    const docs = getDoc(selector, isAll);
-    executeNodeEvents(docs, events);
-  } catch (err) {
-    console.log(err);
+function defaultRegex() {
+  return {
+    special: /[~!@#$%^&*()_+|<>?:{}]/,
+    hanguel: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/,
+    number: /[0-9]/,
+    english: /[a-zA-Z]/,
+  };
+}
+
+function getRegex(regKey = "") {
+  let reg = defaultRegex();
+  let regParsed = {};
+  const parsedName = regKey.replace(/ /g, "").split(",");
+  const { keys, excludeKeys } = getKey(parsedName, "!");
+  if (!isEmpty(excludeKeys)) {
+    excludeKeys.forEach((key) => {
+      delete reg[key];
+    });
+  }
+  if (!isEmpty(keys)) {
+    for (const k of keys) {
+      regParsed[k] = reg[k];
+    }
+  }
+  return regParsed;
+}
+
+function getKey(name, exclude) {
+  let exKeys = [];
+  let keys = [];
+  for (const n of name) {
+    // !일 때는 해당 키를 반환해서 배열에 추가
+    if (!isEmpty(n) && !isEmpty(exclude) && n.includes(exclude)) {
+      exKeys.push(n.replace("!", ""));
+    } else {
+      keys.push(n);
+    }
+  }
+  return { excludeKeys: exKeys, keys: keys };
+}
+
+function regexTest(keys = "", value) {
+  const { object: regKey } = exceptionError(keys);
+  const regex = regKey === "all" ? defaultRegex() : getRegex(regKey);
+  let checked = false;
+  for (const key in regex) {
+    if (!regex.hasOwnProperty(key)) continue;
+    const obj = regex[key];
+    if (obj.test(value)) {
+      checked = true;
+    }
+  }
+  return checked;
+}
+
+function customEventOccurred(node, eventName, fn) {
+  if (!isEmpty(node)) {
+    node.dispatchEvent(
+      new CustomEvent(eventName, {
+        detail: fn(),
+      })
+    );
   }
 }
 
-function executeNodeEvents(docs, { eventList, callFn }) {
-  if (typeof docs === "object" && typeof docs.length !== "undefined") {
-    docs.forEach((childTag) => {
-      eventList.forEach((event) => {
-        childTag.addEventListener(event, (evt) => {
-          callFn(evt, childTag);
-        });
+function addOneEvent(node, event, fn) {
+  node.addEventListener(event, (e) => {
+    fn(e, node);
+  });
+}
+
+class DocumentEvents {
+  constructor(selector, eventList) {
+    this.selector = selector;
+    this.eventList = eventList;
+    const { object, status } = exceptionError(
+      document.querySelectorAll(this.selector)
+    );
+    this.nodeElements = object;
+    this.nodeLength = object.length;
+    this.nodeErrors = status.errorMessage;
+  }
+  get nodes() {
+    return this.nodeElements;
+  }
+
+  get length() {
+    return this.nodeLength;
+  }
+
+  get errors() {
+    return this.nodeErrors;
+  }
+
+  addMultipleEvent(fn) {
+    this.nodeElements.forEach((node) => {
+      this.eventList.forEach((event) => {
+        addOneEvent(node, event, fn);
       });
     });
-  } else {
-    docs.addEventListener(eventList, (evt) => {
-      callFn(evt, docs);
-    });
+  }
+
+  execute(fn) {
+    this.addMultipleEvent(fn);
   }
 }
 
-export { addEvent, getDoc };
+export { DocumentEvents, customEventOccurred, regexTest };
