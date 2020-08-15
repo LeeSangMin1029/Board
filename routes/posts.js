@@ -11,7 +11,7 @@ posts
   .post(util.isLogged, upload.none(), postsCtrl.createPost);
 
 posts
-  .route("/:page")
+  .route("/page/:page")
   .get(postsCtrl.getQueryString, postsCtrl.getPaginatedPosts);
 
 posts.get("/new", util.isLogged, postsCtrl.renderNewPost);

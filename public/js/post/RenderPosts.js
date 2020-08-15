@@ -17,7 +17,7 @@ document.querySelectorAll(".page").forEach((btn) => {
       currentPage[0].classList.remove("current-page");
       this.classList.add("current-page");
       await getPosts(page);
-      history.pushState(null, null, `/posts/${page}`);
+      history.pushState(null, null, `/posts/page/${page}`);
     }
   });
 });
@@ -57,7 +57,7 @@ async function getPosts(page) {
   try {
     const { isEmptyArray } = await import("../utils/ObjectValidation.js");
     const { getData } = await import("../required/Request.js");
-    const { posts } = await getData(`/posts/${page}`);
+    const { posts } = await getData(`/posts/page/${page}`);
     if (isEmptyArray(posts)) {
       renderErrorMsg(`There are no posts please create it`);
     } else {
