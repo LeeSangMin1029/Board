@@ -4,7 +4,6 @@ import * as util from "../utils.js";
 
 const renderNewPost = (req, res) => {
   try {
-    console.log("hello");
     return res.render("posts/new");
   } catch (err) {
     return res.send(err);
