@@ -7,7 +7,7 @@ block append head
 block content
   .main-container
     h4 Login
-    form(method="POST" enctype="multipart/form-data" novalidate)
+    form(action="/login" method="POST" enctype="multipart/form-data" novalidate)
       fieldset
         .email-area
           label(for="email")

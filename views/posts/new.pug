@@ -7,7 +7,7 @@ block append head
 block content
   .main-container
     h4 New Post
-    form(method="POST" enctype="multipart/form-data" novalidate)
+    form(action="/posts" method="POST" enctype="multipart/form-data" novalidate)
       fieldset
         .title-area
           label(for="title")
@@ -18,4 +18,4 @@ block content
             h4 Body
           +userInputTag("textarea", "body", "postBody", "uit", "body")
         a.btn(href="/posts") Back
-        button.btn.ml Create
+        button.btn.ml(type="submit") Create

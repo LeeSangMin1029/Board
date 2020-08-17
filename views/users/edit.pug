@@ -7,7 +7,7 @@ block append head
 block content
   .main-container
     h4 Edit User
-    form(method="POST" enctype="multipart/form-data" novalidate)
+    form(action=`/users/${user._id}` method="POST" enctype="multipart/form-data" novalidate)
       fieldset
         .pw.current-area
           label(for="currentPw")

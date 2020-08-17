@@ -20,11 +20,11 @@ block content
     #post-footer
       a.btn(href="/posts") Back
       - if(isAuthenticated && post.author && currentUser._id.toString() === post.author._id.toString())
-        form#destroy(method="POST" style="display:inline"): button.btn.mlr(type="submit") Delete
+        form#destroy(action=`/posts/${post._id}` method="POST" style="display:inline"): button.btn.mlr(type="submit") Delete
         a.btn(href=`/posts/${post._id}/edit`) Edit
     h4 comments
     #comment-add
-      form#comment(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
+      form#comment(action=`/comment/${post._id}` method="POST" enctype="multipart/form-data" novalidate)
         - if(isAuthenticated)
           fieldset
             .text-area
@@ -49,12 +49,11 @@ block content
                 #action
                   a#action-edit edit
                   #comment-destroy
-                    form#comment(mehtod="POST" enctype="multipart/form-data" data-comment-id=`${comment._id}`)
+                    form#comment(action=`/comment/${comment._id}` mehtod="POST" enctype="multipart/form-data")
                       a#action-delete.ml delete
             #comment-edit(hidden)
               - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
-                form#comment(method="POST" enctype="multipart/form-data" novalidate
-                          data-post-id=`${post._id}` data-comment-id=`${comment._id}`)
+                form#comment(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
                   fieldset
                     .text-area
                       +userInputTag("textarea", "", "text", "uit", "comments")= comment.text
