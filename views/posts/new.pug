@@ -2,12 +2,12 @@ extends ../components/partial/layout.pug
 include ../components/form/formChildNode.pug
 
 block append head
-  script(defer type="module" src="/static/js/post/New.js")
+  script(defer type="module" src="/static/js/post/index.js")
 
 block content
   .main-container
     h4 New Post
-    form(action="/posts" method="POST" enctype="multipart/form-data" novalidate)
+    form(action="/posts" method="POST" id="post-create" enctype="multipart/form-data" novalidate)
       fieldset
         .title-area
           label(for="title")
