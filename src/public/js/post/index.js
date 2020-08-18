@@ -118,9 +118,57 @@
   // })();
 }
 
+import { isEmpty } from "../utils/ObjectValidation.js";
+
 (async function () {
-  const form = document.getElementById("post-create");
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+  sendData("post-create", (response, form) => {
+    response.then((data) => {
+      const { redirect, errors } = data;
+      if (!isEmpty(redirect)) {
+        form.submit();
+      } else {
+        console.log("submit failed");
+      }
+    });
   });
 })();
+
+function sendData(id, fn) {
+  const form = document.getElementById(id);
+  try {
+    addSubmitEvent(form, async (event) => {
+      fn(initForm(form), form);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function getFormData(form, isStringfy = false) {
+  const parsed = {};
+  const formData = new FormData(form);
+  for (const [k, v] of formData.entries()) {
+    parsed[k] = v;
+  }
+  return isStringfy ? JSON.stringify(parsed) : parsed;
+}
+
+// 요청 url은 form의 action 값
+// method는 form의 method 값
+async function initForm(form) {
+  let Params = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: getFormData(form, true),
+    method: form.method,
+  };
+  return await fetch(form.action, Params).then((response) => response.json());
+}
+
+function addSubmitEvent(form, fn) {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    fn(event);
+  });
+}
