@@ -1,0 +1,63 @@
+extends ../components/partial/layout.pug
+include ../components/form/formChildNode.pug
+
+block append head
+  script(defer type="module" src="/static/js/post/index.js")
+
+block append style
+  link(rel="stylesheet" href="/static/css/detail.css")/
+
+block content
+  .main-container
+    #post-header
+      .title #{post.title}
+      p.text #{post.author.name}
+      small: p.text createdAt : #{post.createdAt}
+      if(post.updatedAt)
+        small: p.text updatedAt : #{post.updatedAt}
+    #post-body
+      #post-contents #{post.body}
+    #post-footer
+      a.btn(href="/posts") Back
+      - if(isAuthenticated && post.author && currentUser._id.toString() === post.author._id.toString())
+        form#destroy(action=`/posts/${post._id}` method="POST" style="display:inline"): button.btn.mlr(type="submit") Delete
+        a.btn(href=`/posts/${post._id}/edit`) Edit
+    h4 comments
+    #comment-add
+      form#comment(action=`/comment/${post._id}` method="POST" enctype="multipart/form-data" novalidate)
+        - if(isAuthenticated)
+          fieldset
+            .text-area
+              +userInputTag("textarea", "", "text", "uit", "comments")
+              button#clickable.btn.mt(type="submit") Add Comment
+        - else
+          fieldset(disabled)
+    - if(comments.length)
+      #wrap-comments
+        each comment in comments
+          #comment
+            .header-author
+              a#author-text(href=`/users/${comment.author._id}`)= `${comment.author.name}`
+              - if(comment.updatedAt === undefined)
+                p.published-time= `${comment.createdAt}`
+              - else  
+                p.published-time= `${comment.createdAt}(수정됨)`
+            #comment-body
+              #comment-contents
+                p#comment-text= `${comment.text}`
+              - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
+                #action
+                  a#action-edit edit
+                  #comment-destroy
+                    form#comment(action=`/comment/${comment._id}` mehtod="POST" enctype="multipart/form-data")
+                      a#action-delete.ml delete
+            #comment-edit(hidden)
+              - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
+                form#comment(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
+                  fieldset
+                    .text-area
+                      +userInputTag("textarea", "", "text", "uit", "comments")= comment.text
+                      button.btn#edit-cancel Cancel
+                      button#clickable.btn.mtl(type="submit") Edit Comment
+              - else
+                fieldset(disabled)

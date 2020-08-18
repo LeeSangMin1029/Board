@@ -1,0 +1,11 @@
+input[type="text"],
+input[type="password"],
+textarea[type="text"] {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+
+div[class$="-area"] {
+  margin-bottom: 14px;
+}
