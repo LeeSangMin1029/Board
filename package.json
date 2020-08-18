@@ -2,9 +2,10 @@
   "name": "0616",
   "version": "1.0.0",
   "description": "",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server --experimental-module",
+    "start": "nodemon --experimental-specifier-resolution=node",
     "test": "mocha"
   },
   "nodemonConfig": {
