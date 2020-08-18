@@ -43,7 +43,7 @@ const renderPosts = utils.asyncWrap(async (req, res) => {
       currentPage: pageInfo.page,
     });
   } catch (err) {
-    console.log(err);
+    return res.send(err);
   }
 });
 
@@ -115,7 +115,7 @@ const deletePost = utils.asyncWrap(async (req, res) => {
 
 function getQueryString(req, res, next) {
   const result = {};
-  result.page = req.params.page;
+  result.page = req.params.page ? req.params.page : 1;
   result.limit = 5;
   result.startIndex = (result.page - 1) * result.limit;
   res.pageInfo = result;
@@ -130,7 +130,7 @@ const checkPermission = utils.asyncWrap(async (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    res.send(err);
+    return res.send(err);
   }
 });
 

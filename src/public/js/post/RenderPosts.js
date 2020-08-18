@@ -1,5 +1,10 @@
+import { isEmpty } from "../utils/ObjectValidation.js";
+
 window.addEventListener("popstate", function () {
-  const page = this.location.pathname.split("/")[2];
+  let page = this.location.pathname.split("/")[3];
+  if (isEmpty(page)) {
+    page = 1;
+  }
   document
     .getElementsByClassName("current-page")[0]
     .classList.remove("current-page");
@@ -55,10 +60,9 @@ function renderPosts(posts) {
 
 async function getPosts(page) {
   try {
-    const { isEmptyArray } = await import("../utils/ObjectValidation.js");
     const { getData } = await import("../required/Request.js");
     const { posts } = await getData(`/posts/page/${page}`);
-    if (isEmptyArray(posts)) {
+    if (isEmpty(posts)) {
       renderErrorMsg(`There are no posts please create it`);
     } else {
       renderPosts(posts);
