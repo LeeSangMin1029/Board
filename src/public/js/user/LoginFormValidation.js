@@ -5,8 +5,8 @@
     e.preventDefault();
     try {
       const formdata = new FormData(form);
-      const { errors, redirect } = await getData("/login", formdata, "POST");
-      if (typeof errors === "undefined" && redirect) {
+      const { errors, response } = await getData("/login", formdata, "POST");
+      if (typeof errors === "undefined" && response) {
         window.location.href = "/";
       }
     } catch (err) {
