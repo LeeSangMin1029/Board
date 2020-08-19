@@ -4,6 +4,7 @@ import methodOverride from "method-override";
 import mongoose from "mongoose";
 import session from "express-session";
 import config from "./config";
+import validator from "./validator";
 
 // route setting
 import home from "./routes/home";
@@ -49,10 +50,14 @@ app.use(function (req, res, next) {
   next();
 });
 
+// route setting
 app.use("/", home);
 app.use("/posts", posts);
 app.use("/users", users);
 app.use("/comment", comments);
+
+// error handling middleware
+app.use(validator.mongooseValidator);
 
 app.listen(config.port, () => {
   console.log(`http://localhost:${config.port}`);
