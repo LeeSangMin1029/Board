@@ -121,19 +121,30 @@
 import { isEmpty } from "../utils/ObjectValidation.js";
 
 (async function () {
-  sendData("post-create", (response, form) => {
+  sendFormData("post-create", (response, form) => {
     response.then((data) => {
       const { redirect, errors } = data;
       if (!isEmpty(redirect)) {
         form.submit();
+        moveTo("/posts");
       } else {
-        console.log("submit failed");
+        console.log(errors);
       }
     });
   });
 })();
 
-function sendData(id, fn) {
+function moveTo(relativePath) {
+  const { origin } = window.location;
+  let path = origin + relativePath;
+  if (!isEmpty(path)) {
+    window.location.href = path;
+  } else {
+    console.log("path is empty!");
+  }
+}
+
+function sendFormData(id, fn) {
   const form = document.getElementById(id);
   try {
     addSubmitEvent(form, async (event) => {
