@@ -9,23 +9,23 @@ block content
     h4 Edit User
     form(action=`/users/${user._id}` method="POST" enctype="multipart/form-data" novalidate)
       fieldset
-        .pw.current-area
+        .input-area
           label(for="currentPw")
             h4 current password*
           +userInputTag("input", "currentPw", "currentPassword", "uit", "current password", "password")
-        .name-area
+        .input-area
           label(for="name")
             h4 name
           +userInputTag("input", "name", "name", "uit", "name")(value=user.name)
-        .id-area
+        .input-area
           label(for="id")
             h4 id
           +userInputTag("input", "id", "id", "uit", "id")(value=user.id)
-        .pw.new-area
+        .input-area
           label(for="pw-new")
             h4 new password
           +userInputTag("input", "pw-new", "newPassword", "uit", "new password", "password")
-        .pw.confirm-area
+        .input-area
           label(for="pw-confirm")
             h4 password confirmation
           +userInputTag("input", "pw-confirm", "passwordConfirmation", "uit", "confirm password", "password")

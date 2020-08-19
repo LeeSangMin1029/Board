@@ -27,7 +27,7 @@ block content
       form#comment(action=`/comment/${post._id}` method="POST" enctype="multipart/form-data" novalidate)
         - if(isAuthenticated)
           fieldset
-            .text-area
+            .input-area
               +userInputTag("textarea", "", "text", "uit", "comments")
               button#clickable.btn.mt(type="submit") Add Comment
         - else
@@ -55,7 +55,7 @@ block content
               - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
                 form#comment(method="POST" enctype="multipart/form-data" novalidate data-post-id=`${post._id}`)
                   fieldset
-                    .text-area
+                    .input-area
                       +userInputTag("textarea", "", "text", "uit", "comments")= comment.text
                       button.btn#edit-cancel Cancel
                       button#clickable.btn.mtl(type="submit") Edit Comment

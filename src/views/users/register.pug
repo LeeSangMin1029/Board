@@ -9,23 +9,23 @@ block content
     h4 New User
     form(method="POST" enctype="multipart/form-data" novalidate)
       fieldset
-        .name-area
+        .input-area
           label(for="name")
             h4 name
           +userInputTag("input", "name", "name", "uit", "name")
-        .email-area
+        .input-area
           label(for="email")
             h4 email
           +userInputTag("input", "email", "email", "uit", "email")
-        .id-area
+        .input-area
           label(for="id")
             h4 id
           +userInputTag("input", "id", "id", "uit", "id")
-        .pw.origin-area
+        .input-area
           label(for="pw-origin")
             h4 password
           +userInputTag("input", "pw-origin", "password", "uit", "password", "password")
-        .pw.confirm-area
+        .input-area
           label(for="pw-confirm")
             h4 confirm password
           +userInputTag("input", "pw-confirm", "passwordConfirmation", "uit", "confirm password", "password")

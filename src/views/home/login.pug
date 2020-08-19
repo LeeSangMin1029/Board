@@ -9,11 +9,11 @@ block content
     h4 Login
     form(action="/login" method="POST" enctype="multipart/form-data" novalidate)
       fieldset
-        .email-area
+        .input-area
           label(for="email")
             h4 email
           +userInputTag("input", "email", "email", "uit", "email")
-        .password-area
+        .input-area
           label(for="password")
             h4 password
           +userInputTag("input", "password", "password", "uit", "password", "password")
