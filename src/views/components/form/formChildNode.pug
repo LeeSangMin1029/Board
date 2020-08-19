@@ -10,7 +10,6 @@ mixin userInputTag(tag, id, name, className, placeholder="", type="text")
         name=name
         class=className
         placeholder=placeholder)&attributes(attributes)
-      div: span.error(aria-live="polite")
     when "textarea"
       textarea(
         type=type
@@ -19,4 +18,3 @@ mixin userInputTag(tag, id, name, className, placeholder="", type="text")
         class=className
         placeholder=placeholder
         rows="3"): block
-      div: span.error(aria-live="polite")
