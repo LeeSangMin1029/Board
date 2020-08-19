@@ -1,12 +1,20 @@
 import passport from "../config/passport";
 import utils from "../utils";
 
-const renderHome = utils.asyncWrap(async (req, res) => {
-  return res.render("home/main");
+const renderHome = utils.asyncWrap(async (req, res, next) => {
+  try {
+    return res.render("home/main");
+  } catch (err) {
+    return next(err);
+  }
 });
 
-const renderLoginForm = utils.asyncWrap(async (req, res) => {
-  return res.render("home/login");
+const renderLoginForm = utils.asyncWrap(async (req, res, next) => {
+  try {
+    return res.render("home/login");
+  } catch (err) {
+    return next(err);
+  }
 });
 
 const userLogin = (req, res) => {
@@ -25,7 +33,7 @@ const userLogin = (req, res) => {
       typeof errors.email !== "undefined" ||
       typeof errors.password !== "undefined"
     ) {
-      return res.json({ errors: errors });
+      return res.json({ response: errors });
     }
 
     if (
@@ -37,7 +45,7 @@ const userLogin = (req, res) => {
       if (err) {
         return res.json(err);
       }
-      return res.json({ redirect: true });
+      return res.json({ response: true });
     });
   })(req, res);
 };

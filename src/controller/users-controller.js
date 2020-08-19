@@ -1,8 +1,12 @@
 import User from "../models/User";
 import utils from "../utils";
 
-const renderRegisterForm = (req, res) => {
-  return res.render("users/register");
+const renderRegisterForm = (req, res, next) => {
+  try {
+    return res.render("users/register");
+  } catch (err) {
+    return next(err);
+  }
 };
 
 const createUser = utils.asyncWrap(async (req, res) => {
@@ -15,9 +19,9 @@ const createUser = utils.asyncWrap(async (req, res) => {
       passwordConfirmation: req.body.passwordConfirmation,
     });
     await user.save();
-    return res.json({ redirect: true });
+    return res.json({ response: true });
   } catch (err) {
-    return res.json({ errors: utils.errorHandler(err) });
+    return next(err);
   }
 });
 
@@ -35,7 +39,7 @@ const renderUser = utils.asyncWrap(async (req, res) => {
     });
     return res.render("users/show", { user: payload });
   } catch (err) {
-    return res.send(err);
+    return next(err);
   }
 });
 
@@ -45,7 +49,7 @@ const renderEditUser = utils.asyncWrap(async (req, res) => {
     const user = await User.findOne({ _id: req.params.object_id }).lean();
     return res.render("users/edit", { user: user });
   } catch (err) {
-    return res.send(err);
+    return next(err);
   }
 });
 
@@ -58,10 +62,9 @@ const updateUser = utils.asyncWrap(async (req, res) => {
     user.password = req.body.newPassword ? req.body.newPassword : user.password;
     for (const p in req.body) user[p] = req.body[p];
     await user.save();
-    return res.json({ redirect: true });
+    return res.json({ response: true });
   } catch (err) {
-    console.error(err);
-    return res.json({ errors: utils.errorHandler(err) });
+    return next(err);
   }
 });
 

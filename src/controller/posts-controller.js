@@ -2,38 +2,38 @@ import Post from "../models/Post";
 import Comment from "../models/Comment";
 import utils from "../utils";
 
-const renderNewPost = (req, res) => {
+const renderNewPost = (req, res, next) => {
   try {
     return res.render("posts/new");
   } catch (err) {
-    return res.send(err);
+    return next(err);
   }
 };
 
-const renderEditPost = utils.asyncWrap(async (req, res) => {
+const renderEditPost = utils.asyncWrap(async (req, res, next) => {
   try {
     const post = await Post.findOne({ _id: req.params.id }).lean();
     return res.render("posts/edit", { post: post });
   } catch (err) {
-    return res.send(err);
+    return next(err);
   }
 });
 
-const createPost = utils.asyncWrap(async (req, res) => {
+const createPost = utils.asyncWrap(async (req, res, next) => {
   try {
     const post = new Post({
       author: req.user._id,
-      title: req.body.postTitle,
-      body: req.body.postBody,
+      title: req.body.title,
+      body: req.body.body,
     });
     await post.save();
-    return res.json({ redirect: true });
+    return res.json({ response: true });
   } catch (err) {
-    return res.json({ errors: utils.errorHandler(err) });
+    return next(err);
   }
 });
 
-const renderPosts = utils.asyncWrap(async (req, res) => {
+const renderPosts = utils.asyncWrap(async (req, res, next) => {
   try {
     const { pageInfo } = res;
     const { posts, pageCount } = await queryApplyPostsInfo(pageInfo);
@@ -43,11 +43,11 @@ const renderPosts = utils.asyncWrap(async (req, res) => {
       currentPage: pageInfo.page,
     });
   } catch (err) {
-    return res.send(err);
+    return next(err);
   }
 });
 
-const getPaginatedPosts = utils.asyncWrap(async (req, res) => {
+const getPaginatedPosts = utils.asyncWrap(async (req, res, next) => {
   try {
     const { pageInfo } = res;
     const { posts, pageCount } = await queryApplyPostsInfo(pageInfo);
@@ -64,11 +64,11 @@ const getPaginatedPosts = utils.asyncWrap(async (req, res) => {
       },
     });
   } catch (err) {
-    return res.send(err);
+    return next(err);
   }
 });
 
-const renderPost = utils.asyncWrap(async (req, res) => {
+const renderPost = utils.asyncWrap(async (req, res, next) => {
   try {
     const post = await Post.findOne({ _id: req.params.id })
       .lean()
@@ -82,34 +82,33 @@ const renderPost = utils.asyncWrap(async (req, res) => {
       comments: getModelArray(comments, "YYYY-MM-DD HH:mm:ss"),
     });
   } catch (err) {
-    return res.send(err);
+    return next(err);
   }
 });
 
-const updatePost = utils.asyncWrap(async (req, res) => {
+const updatePost = utils.asyncWrap(async (req, res, next) => {
   try {
     const postPayload = {
-      title: req.body.postTitle,
-      body: req.body.postBody,
+      title: req.body.title,
+      body: req.body.body,
       updatedAt: Date.now(),
     };
     await Post.updateOne({ _id: req.params.id }, postPayload, {
       runValidators: true,
     });
-    return res.json({ redirect: true });
+    return res.json({ response: true });
   } catch (err) {
-    return res.json({ errors: utils.errorHandler(err) });
+    return next(err);
   }
 });
 
-const deletePost = utils.asyncWrap(async (req, res) => {
+const deletePost = utils.asyncWrap(async (req, res, next) => {
   try {
     await Post.findOneAndRemove({ _id: req.params.id });
     await Comment.deleteMany({ post: { $in: req.params.id } });
-    return res.json({ redirect: true });
+    return res.json({ response: true });
   } catch (err) {
-    console.log(err);
-    return res.send(err);
+    return next(err);
   }
 });
 
@@ -129,8 +128,7 @@ const checkPermission = utils.asyncWrap(async (req, res, next) => {
       return utils.noPermission(req, res);
     next();
   } catch (err) {
-    console.log(err);
-    return res.send(err);
+    return next(err);
   }
 });
 
@@ -186,8 +184,4 @@ function convertDate(model, format) {
     });
   }
   return model;
-}
-
-function partialSearchedPosts(searchText) {
-  console.log(searchText);
 }
