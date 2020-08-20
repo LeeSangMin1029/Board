@@ -127,19 +127,18 @@ function getErrorFieldName(errors) {
   return result;
 }
 
-function errorRender(errors = {}) {
+function errorRender(errors = []) {
   const name = getErrorFieldName(errors);
   const attName = "error-messages";
-  let inputAreaDoc;
-  for (const index in name) {
-    inputAreaDoc = document
-      .querySelector(`#${name[index]}`)
+  for (const i in name) {
+    let inputAreaDoc = document
+      .querySelector(`#${name[i]}`)
       .closest(".input-area");
     const inpEl = inputAreaDoc.querySelector(".uit");
     if (!isEmpty(inpEl)) {
-      inputAreaDoc.setAttribute(attName, errors[name[index]].message);
-      let tmpMessage = inputAreaDoc.getAttribute(attName);
-      inpEl.addEventListener("focusin", () => {
+      let tmpMessage = errors[name[i]].message;
+      inputAreaDoc.setAttribute(attName, tmpMessage);
+      inpEl.addEventListener("focusin", (e) => {
         inputAreaDoc.removeAttribute(attName);
       });
 
