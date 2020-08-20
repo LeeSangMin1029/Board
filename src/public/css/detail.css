@@ -30,7 +30,7 @@ div#comment {
 #post-header {
   border-bottom: 1px solid #d3d3d3;
   margin: 0px 0px 10px 0px;
-  padding: 20px;
+  padding: 20px 0px 5px 0px;
 }
 
 #post-body {
@@ -50,14 +50,8 @@ div#comment {
   display: inline-block;
 }
 
-#header-author {
-}
-
 #author-text {
   color: black;
-}
-
-#author-text {
   display: inline;
   margin-right: 5px;
   font-size: 1.2rem;
@@ -69,17 +63,16 @@ div#comment {
   color: #a9a9a9;
 }
 
-#comment-body {
-}
-
 #action-delete:hover,
 #action-edit:hover {
   cursor: pointer;
 }
 
-#action-edit,
-#action-delete {
+#comment-destroy,
+#action-edit {
+  display: inline-block;
 }
 
 #action {
+  display: inline-block;
 }
