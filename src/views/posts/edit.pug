@@ -1,10 +1,13 @@
 extends ../components/partial/layout.pug
 include ../components/form/formChildNode.pug
 
+block append head
+  script(defer type="module" src="/static/js/post/index.js")
+
 block content
   .main-container
     h4 Edit Post
-    form(action=`/posts/${post._id}` method="POST" enctype="multipart/form-data" novalidate)
+    form(action=`/posts/${post._id}` method="POST" id="post-edit" enctype="multipart/form-data" novalidate)
       fieldset
         .input-area
           label(for="title")
