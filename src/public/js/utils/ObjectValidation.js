@@ -10,11 +10,11 @@ function safeParseJSON(json) {
 }
 
 function isEmpty(value) {
-  if (typeof value === "null" || typeof value === "undefined") {
+  if ((typeof value === "object" && !value) || typeof value === "undefined") {
     return true;
   }
 
-  if (typeof value === "string" && !value) {
+  if (typeof value === "string" && value === "") {
     return true;
   }
 

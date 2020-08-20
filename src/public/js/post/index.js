@@ -155,35 +155,42 @@ function errorRender(errors = []) {
 }
 
 function moveTo(relativePath) {
-  const { origin } = window.location;
-  let path = origin + relativePath;
-  if (!isEmpty(path)) {
-    window.location.href = path;
-  } else {
-    throw new Error("path does not exist!!!");
+  try {
+    const { origin } = window.location;
+    if (!isEmpty(origin)) {
+      let path = origin + relativePath;
+      window.location.href = path;
+    }
+  } catch (err) {
+    console.log(err);
   }
 }
 
-function getFormData(form, isStringfy = false) {
-  const parsed = {};
-  const formData = new FormData(form);
-  for (const [k, v] of formData.entries()) {
-    parsed[k] = v;
+function getFormData(form = null, isStringfy = false) {
+  try {
+    const parsed = {};
+    const formData = new FormData(form);
+    for (const [k, v] of formData.entries()) {
+      parsed[k] = v;
+      return isStringfy ? JSON.stringify(parsed) : parsed;
+    }
+  } catch (err) {
+    console.log(err);
   }
-  return isStringfy ? JSON.stringify(parsed) : parsed;
 }
 
 // 요청 url은 form의 action 값
 // method는 form의 method 값
-async function fetchSubmitReady(form) {
-  const params = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: getFormData(form, true),
-    method: form.method,
-  };
+async function fetchSubmitReady(form = null) {
   try {
+    const formData = getFormData(form, true);
+    const params = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: formData,
+      method: form.method,
+    };
     const response = await fetch(form.action, params);
     return await response.json();
   } catch (err) {
@@ -191,15 +198,22 @@ async function fetchSubmitReady(form) {
   }
 }
 
-function entry() {
-  const form = document.getElementById("post-create");
+// 페이지 내에 하나의 폼만 검사하는 함수
+function formValidation(formId = "", moveToPath = "") {
+  if (isEmpty(formId) || isEmpty(moveToPath)) {
+    return;
+  }
+  const form = document.getElementById(formId);
+  if (isEmpty(form)) {
+    return;
+  }
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
       const { response } = await fetchSubmitReady(form);
       if (!isEmpty(response) && isEmpty(response.errors)) {
         form.submit();
-        moveTo("/posts");
+        moveTo(moveToPath);
       } else {
         errorRender(response.errors);
       }
@@ -207,6 +221,23 @@ function entry() {
       console.log(err);
     }
   });
+}
+
+function entry() {
+  try {
+    // 글 생성 시 사용되는 폼 유효성 검사
+    formValidation("post-create", "/posts");
+    formValidation("", "");
+    // 글 수정 시 사용되는 폼 유효성 검사
+    // 글 삭제 시 사용되는 폼 유효성 검사
+    // 댓글 생성 시 사용되는 폼 유효성 검사
+    // 댓글 수정 시 사용되는 폼 유효성 검사
+    // 댓글 삭제 시 사용되는 폼 유효성 검사
+    // 사용자 생성 시 사용되는 폼 유효성 검사
+    // 사용자 수정 시 사용되는 폼 유효성 검사
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 entry();
