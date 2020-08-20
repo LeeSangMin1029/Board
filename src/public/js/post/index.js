@@ -117,22 +117,43 @@
   //   addEvent("#comment-edit form#comment", events.formSubmit, true);
   // })();
 }
-
 import { isEmpty } from "../utils/ObjectValidation.js";
 
-(async function () {
-  sendFormData("post-create", (response, form) => {
-    response.then((data) => {
-      const { redirect, errors } = data;
-      if (!isEmpty(redirect)) {
-        form.submit();
-        moveTo("/posts");
-      } else {
-        console.log(errors);
-      }
-    });
-  });
-})();
+function getErrorFieldName(errors) {
+  const result = [];
+  if (!isEmpty(errors)) {
+    for (const [k] of Object.entries(errors)) result.push(k);
+  }
+  return result;
+}
+
+function errorRender(errors = {}) {
+  const name = getErrorFieldName(errors);
+  const attName = "error-messages";
+  let inputAreaDoc;
+  for (const index in name) {
+    inputAreaDoc = document
+      .querySelector(`#${name[index]}`)
+      .closest(".input-area");
+    const inpEl = inputAreaDoc.querySelector(".uit");
+    if (!isEmpty(inpEl)) {
+      inputAreaDoc.setAttribute(attName, errors[name[index]].message);
+      let tmpMessage = inputAreaDoc.getAttribute(attName);
+      inpEl.addEventListener("focusin", () => {
+        inputAreaDoc.removeAttribute(attName);
+      });
+
+      inpEl.addEventListener("focusout", (e) => {
+        const v = e.target.value;
+        if (v === "") {
+          inputAreaDoc.setAttribute(attName, tmpMessage);
+        }
+      });
+    } else {
+      throw new Error("input Document does not exist!!!");
+    }
+  }
+}
 
 function moveTo(relativePath) {
   const { origin } = window.location;
@@ -140,18 +161,7 @@ function moveTo(relativePath) {
   if (!isEmpty(path)) {
     window.location.href = path;
   } else {
-    console.log("path is empty!");
-  }
-}
-
-function sendFormData(id, fn) {
-  const form = document.getElementById(id);
-  try {
-    addSubmitEvent(form, async (event) => {
-      fn(initForm(form), form);
-    });
-  } catch (err) {
-    console.log(err);
+    throw new Error("path does not exist!!!");
   }
 }
 
@@ -166,20 +176,38 @@ function getFormData(form, isStringfy = false) {
 
 // 요청 url은 form의 action 값
 // method는 form의 method 값
-async function initForm(form) {
-  let Params = {
+async function fetchSubmitReady(form) {
+  const params = {
     headers: {
       "Content-Type": "application/json",
     },
     body: getFormData(form, true),
     method: form.method,
   };
-  return await fetch(form.action, Params).then((response) => response.json());
+  try {
+    const response = await fetch(form.action, params);
+    return await response.json();
+  } catch (err) {
+    console.log("Failed to fetch error messages : ", err);
+  }
 }
 
-function addSubmitEvent(form, fn) {
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    fn(event);
+function entry() {
+  const form = document.getElementById("post-create");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+      const { response } = await fetchSubmitReady(form);
+      if (!isEmpty(response) && isEmpty(response.errors)) {
+        form.submit();
+        moveTo("/posts");
+      } else {
+        errorRender(response.errors);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   });
 }
+
+entry();
