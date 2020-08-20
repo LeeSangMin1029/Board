@@ -11,20 +11,6 @@ utils.asyncWrap = (asyncFn) => {
   };
 };
 
-// title : message, body : message의 꼴로 만드는 함수
-utils.errorHandler = (errors) => {
-  const parsed = {};
-  if (errors.name == "ValidationError") {
-    for (const name in errors.errors) {
-      const validationError = errors.errors[name];
-      parsed[name] = { message: validationError.message };
-    }
-  } else {
-    parsed.unhandled = JSON.stringify(errors);
-  }
-  return parsed;
-};
-
 utils.dateFormatting = ({ date, formatString }) => {
   return moment(date).format(formatString);
 };
