@@ -172,8 +172,8 @@ function getFormData(form = null, isStringfy = false) {
     const formData = new FormData(form);
     for (const [k, v] of formData.entries()) {
       parsed[k] = v;
-      return isStringfy ? JSON.stringify(parsed) : parsed;
     }
+    return isStringfy ? JSON.stringify(parsed) : parsed;
   } catch (err) {
     console.log(err);
   }
@@ -181,7 +181,7 @@ function getFormData(form = null, isStringfy = false) {
 
 // 요청 url은 form의 action 값
 // method는 form의 method 값
-async function fetchSubmitReady(form = null) {
+async function fetchSubmitReady(form = null, requestURL = "") {
   try {
     const formData = getFormData(form, true);
     const params = {
@@ -191,15 +191,14 @@ async function fetchSubmitReady(form = null) {
       body: formData,
       method: form.method,
     };
-    const response = await fetch(form.action, params);
+    const response = await fetch(requestURL, params);
     return await response.json();
   } catch (err) {
     console.log("Failed to fetch error messages : ", err);
   }
 }
 
-// 페이지 내에 하나의 폼만 검사하는 함수
-function formValidation(formId = "", moveToPath = "") {
+function formValidation(formId = "", moveToPath = "", requestURL = "") {
   if (isEmpty(formId) || isEmpty(moveToPath)) {
     return;
   }
@@ -210,11 +209,11 @@ function formValidation(formId = "", moveToPath = "") {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-      const { response } = await fetchSubmitReady(form);
+      const { response } = await fetchSubmitReady(form, requestURL);
       if (!isEmpty(response) && isEmpty(response.errors)) {
         form.submit();
         moveTo(moveToPath);
-      } else {
+      } else if (!isEmpty(response.errors)) {
         errorRender(response.errors);
       }
     } catch (err) {
@@ -226,9 +225,10 @@ function formValidation(formId = "", moveToPath = "") {
 function entry() {
   try {
     // 글 생성 시 사용되는 폼 유효성 검사
-    formValidation("post-create", "/posts");
-    formValidation("", "");
+    formValidation("post-create", "/posts", "/posts");
     // 글 수정 시 사용되는 폼 유효성 검사
+    const path = window.location.pathname.replace("/edit", "");
+    formValidation("post-edit", path, `${path}?_method=PUT`);
     // 글 삭제 시 사용되는 폼 유효성 검사
     // 댓글 생성 시 사용되는 폼 유효성 검사
     // 댓글 수정 시 사용되는 폼 유효성 검사
