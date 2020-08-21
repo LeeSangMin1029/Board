@@ -68,6 +68,7 @@ div#comment {
   cursor: pointer;
 }
 
+#action-delete,
 #comment-destroy,
 #action-edit {
   display: inline-block;
