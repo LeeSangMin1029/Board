@@ -12,7 +12,7 @@ users.get("/register", usersCtrl.renderRegisterForm);
 
 users
   .route("/:object_id")
-  .get(utils.isLogged, checkPermission, usersCtrl.renderUser)
+  .get(usersCtrl.renderUser)
   .put(utils.isLogged, checkPermission, upload.none(), usersCtrl.updateUser);
 
 users.get(
