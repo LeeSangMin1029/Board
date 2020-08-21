@@ -1,6 +1,9 @@
+import mongoose from "mongoose";
 import Post from "../models/Post";
 import Comment from "../models/Comment";
 import utils from "../utils";
+
+const ObjectId = mongoose.Types.ObjectId;
 
 const renderNewPost = (req, res, next) => {
   try {
@@ -43,6 +46,7 @@ const renderPosts = utils.asyncWrap(async (req, res, next) => {
       currentPage: pageInfo.page,
     });
   } catch (err) {
+    console.log(err);
     return next(err);
   }
 });
@@ -70,15 +74,34 @@ const getPaginatedPosts = utils.asyncWrap(async (req, res, next) => {
 
 const renderPost = utils.asyncWrap(async (req, res, next) => {
   try {
-    const post = await Post.findOne({ _id: req.params.id })
-      .lean()
-      .populate({ path: "author", options: { lean: true } });
-    const comments = await Comment.find({ post: req.params.id })
-      .sort("createdAt")
-      .lean()
-      .populate({ path: "author", select: "name", options: { lean: true } });
+    const post = await Post.aggregate([
+      { $match: { _id: ObjectId(req.params.id) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      { $unwind: "$author" },
+    ]);
+    const comments = await Comment.aggregate([
+      { $match: { post: ObjectId(req.params.id) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      { $unwind: "$author" },
+      { $sort: { createdAt: 1 } },
+      { $project: { name: 0 } },
+    ]);
     return res.render("posts/show", {
-      post: convertDate(post, "YYYY-MM-DD"),
+      post: convertDate(post[0], "YYYY-MM-DD"),
       comments: getModelArray(comments, "YYYY-MM-DD HH:mm:ss"),
     });
   } catch (err) {
@@ -149,15 +172,21 @@ async function queryApplyPostsInfo(pageInfo) {
   const postLength = await Post.countDocuments();
   const pageCount = utils.getPageCount(postLength, pageInfo.limit);
   const posts = getModelArray(
-    await Post.find()
-      .skip(pageInfo.startIndex)
-      .limit(pageInfo.limit)
-      .sort("-createdAt")
-      .lean()
-      .populate({
-        path: "author",
-        options: { lean: true },
-      }),
+    await Post.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      { $unwind: "$author" },
+      { $project: { name: 0 } },
+      { $sort: { createdAt: -1 } },
+      { $skip: pageInfo.startIndex },
+      { $limit: pageInfo.limit },
+    ]),
     "YYYY-MM-DD"
   );
   return {
