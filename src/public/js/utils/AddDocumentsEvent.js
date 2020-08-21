@@ -7,7 +7,7 @@ import { isEmpty } from "./ObjectValidation.js";
 */
 function exceptionError(object) {
   const status = {};
-  const isObj = !isEmpty(object);
+  const isObj = isNotEmpty(object);
   let resultObject, code;
   if (isObj) {
     resultObject = object;
@@ -37,12 +37,12 @@ function getRegex(regKey = "") {
   let regParsed = {};
   const parsedName = regKey.replace(/ /g, "").split(",");
   const { keys, excludeKeys } = getKey(parsedName, "!");
-  if (!isEmpty(excludeKeys)) {
+  if (isNotEmpty(excludeKeys)) {
     excludeKeys.forEach((key) => {
       delete reg[key];
     });
   }
-  if (!isEmpty(keys)) {
+  if (isNotEmpty(keys)) {
     for (const k of keys) {
       regParsed[k] = reg[k];
     }
@@ -55,7 +55,7 @@ function getKey(name, exclude) {
   let keys = [];
   for (const n of name) {
     // !일 때는 해당 키를 반환해서 배열에 추가
-    if (!isEmpty(n) && !isEmpty(exclude) && n.includes(exclude)) {
+    if (isNotEmpty(n) && isNotEmpty(exclude) && n.includes(exclude)) {
       exKeys.push(n.replace("!", ""));
     } else {
       keys.push(n);
@@ -79,7 +79,7 @@ function regexTest(keys = "", value) {
 }
 
 function customEventOccurred(node, eventName, fn) {
-  if (!isEmpty(node)) {
+  if (isNotEmpty(node)) {
     node.dispatchEvent(
       new CustomEvent(eventName, {
         detail: fn(),

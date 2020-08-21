@@ -25,8 +25,12 @@ function isEmpty(value) {
   return false;
 }
 
+function isNotEmpty(value) {
+  return !isEmpty(value);
+}
+
 function isEmptyArray(arr) {
   return Array.isArray(arr) && !arr.length;
 }
 
-export { safeParseJSON, isEmptyArray, isEmpty };
+export { safeParseJSON, isEmptyArray, isEmpty, isNotEmpty };
