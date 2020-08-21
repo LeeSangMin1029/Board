@@ -1,148 +1,75 @@
-{
-  // import { addEvent } from "../utils/AddDocumentsEvent.js";
-  // import { getData } from "../required/Request.js";
-  // import { isEmpty } from "../utils/ObjectValidation.js";
-  // function getEvents() {
-  //   return {
-  //     events: {
-  //       input: {
-  //         eventList: ["paste", "input", "propertychange"],
-  //         callFn: inputCallFn,
-  //       },
-  //       toggleBtn: {
-  //         eventList: ["click"],
-  //         callFn: btnCallFn,
-  //       },
-  //       formSubmit: {
-  //         eventList: ["submit"],
-  //         callFn: formEditCallFn,
-  //       },
-  //       deleteComment: {
-  //         eventList: ["click"],
-  //         callFn: deleteCommentBtnCallFn,
-  //       },
-  //     },
-  //   };
-  // }
-  // const inputCallFn = (e, doc) => {
-  //   const curValue = e.target.value;
-  //   const initialValue = e.target.defaultValue;
-  //   const btn = doc.closest("div.text-area").querySelector("#clickable");
-  //   // 현재 값이 비어있을 때
-  //   if (isEmpty(curValue)) {
-  //     btn.disabled = true;
-  //   }
-  //   // 초기 값이 현재 값과 같을 때
-  //   else if (initialValue === curValue) {
-  //     btn.disabled = true;
-  //   } else {
-  //     btn.disabled = false;
-  //   }
-  // };
-  // const btnCallFn = (e, doc) => {
-  //   e.preventDefault();
-  //   const comment = doc.closest("div#comment");
-  //   let toggleHidden = comment.querySelector("#comment-edit");
-  //   toggleHidden.hidden = toggleHidden.hidden ? false : true;
-  //   toggleHidden = comment.querySelector("#comment-body");
-  //   toggleHidden.hidden = toggleHidden.hidden ? false : true;
-  // };
-  // const formEditCallFn = async (e, doc) => {
-  //   e.preventDefault();
-  //   try {
-  //     const formdata = new FormData(doc);
-  //     formdata.append("post_id", doc.dataset.postId);
-  //     const { errors, redirect } = await getData(
-  //       `/comment/${doc.dataset.commentId}`,
-  //       formdata,
-  //       "PUT"
-  //     );
-  //     if (typeof errors === "undefined" && redirect) {
-  //       window.location.href = e.target.action;
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-  // const deleteCommentBtnCallFn = async (e, doc) => {
-  //   e.preventDefault();
-  //   try {
-  //     if (confirm("Are you sure you want to delete this comment?")) {
-  //       const form = doc.closest("form#comment");
-  //       const path = `/comment/${form.dataset.commentId}`;
-  //       const result = await fetch(path, {
-  //         method: "DELETE",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       });
-  //       if (result.ok && (await result.json())) {
-  //         window.location.href = window.location;
-  //       } else {
-  //         console.log(result.status);
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-  // function initButtonsDisabled() {
-  //   const btns = document.querySelectorAll("#clickable");
-  //   btns.forEach((btn) => {
-  //     btn.disabled = true;
-  //   });
-  // }
-  // function formAddSubmit() {
-  //   const form = document.querySelector("#comment-add form#comment");
-  //   form.addEventListener("submit", async (e) => {
-  //     e.preventDefault();
-  //     try {
-  //       const formdata = new FormData(form);
-  //       formdata.append("post_id", form.dataset.postId);
-  //       const { getData } = await import("../required/Request.js");
-  //       const { error, redirect } = await getData("/comment", formdata, "POST");
-  //       console.log(error, redirect);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   });
-  // }
-  // (async function () {
-  //   const { events } = getEvents();
-  //   initButtonsDisabled();
-  //   formAddSubmit();
-  //   addEvent(".uit", events.input, true);
-  //   addEvent("#action-edit, #edit-cancel", events.toggleBtn, true);
-  //   addEvent("#action-delete", events.deleteComment, true);
-  //   addEvent("#comment-edit form#comment", events.formSubmit, true);
-  // })();
-}
-import { isEmpty } from "../utils/ObjectValidation.js";
+import { isEmpty, isNotEmpty } from "../utils/ObjectValidation.js";
 
-function getErrorFieldName(errors) {
+const getErrorFieldName = (errors) => {
   const result = [];
-  if (!isEmpty(errors)) {
+  if (isNotEmpty(errors)) {
     for (const [k] of Object.entries(errors)) result.push(k);
   }
   return result;
-}
+};
 
-function errorRender(errors = []) {
+const queryDocuments = (selector = "", isAll = false) => {
+  return isAll
+    ? document.querySelectorAll(selector)
+    : document.querySelector(selector);
+};
+
+const moveTo = (relativePath) => {
+  try {
+    const { origin } = window.location;
+    if (isNotEmpty(origin)) {
+      let path = origin + relativePath;
+      window.location.href = path;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const formDataProcessing = (form = null, data = {}) => {
+  const formData = new FormData(form);
+  if (isEmpty(data)) {
+    return formData;
+  } else {
+    for (const [k, v] of Object.entries(data)) {
+      formData.append(k, v);
+    }
+    return formData;
+  }
+};
+
+const getArguments = (originArguments = [], ...otherKey) => {
+  const parsedArg = {};
+  if (isNotEmpty(otherKey) && isNotEmpty(originArguments)) {
+    for (const i in originArguments) {
+      for (const j in otherKey) {
+        const value = originArguments[i][otherKey[j]];
+        if (isNotEmpty(value)) {
+          parsedArg[otherKey[j]] = value;
+        }
+      }
+    }
+  }
+  return parsedArg;
+};
+
+const errorRender = (form = null, errors = []) => {
+  if (isEmpty(form) || isEmpty(errors)) return;
   const name = getErrorFieldName(errors);
   const attName = "error-messages";
   for (const i in name) {
-    let inputAreaDoc = document
-      .querySelector(`#${name[i]}`)
+    let inputAreaDoc = form
+      .querySelector(`#${form.id} #${name[i]}`)
       .closest(".input-area");
-    const inpEl = inputAreaDoc.querySelector(".uit");
-    if (!isEmpty(inpEl)) {
+    const uitTag = inputAreaDoc.querySelector(".uit");
+    if (isNotEmpty(uitTag)) {
       let tmpMessage = errors[name[i]].message;
       inputAreaDoc.setAttribute(attName, tmpMessage);
-      inpEl.addEventListener("focusin", (e) => {
+      uitTag.addEventListener("focusin", (e) => {
         inputAreaDoc.removeAttribute(attName);
       });
 
-      inpEl.addEventListener("focusout", (e) => {
+      uitTag.addEventListener("focusout", (e) => {
         const v = e.target.value;
         if (v === "") {
           inputAreaDoc.setAttribute(attName, tmpMessage);
@@ -152,42 +79,35 @@ function errorRender(errors = []) {
       throw new Error("input Document does not exist!!!");
     }
   }
-}
+};
 
-function moveTo(relativePath) {
-  try {
-    const { origin } = window.location;
-    if (!isEmpty(origin)) {
-      let path = origin + relativePath;
-      window.location.href = path;
+const editFormToggle = (e, doc) => {
+  if (isNotEmpty(doc)) {
+    const comment = doc.closest("div#comment");
+    let editDoc = comment.querySelector("#comment-body");
+    const value = editDoc.querySelector("#comment-text").innerHTML;
+    editDoc.hidden = editDoc.hidden ? false : true;
+    editDoc = comment.querySelector("#comment-edit-toggle");
+    editDoc.hidden = editDoc.hidden ? false : true;
+    if (editDoc.hidden && (value === editDoc.value || isEmpty(editDoc.value))) {
+      const attName = "error-messages";
+      const inputAreaDoc = editDoc.querySelector(".input-area");
+      const uitDoc = inputAreaDoc.querySelector(".uit");
+      uitDoc.value = value;
+      if (isNotEmpty(inputAreaDoc.getAttribute(attName))) {
+        inputAreaDoc.removeAttribute(attName);
+      }
     }
-  } catch (err) {
-    console.log(err);
   }
-}
+};
 
-function getFormData(form = null, isStringfy = false) {
+const fetchResponseReady = async (
+  form = null,
+  formData = {},
+  requestURL = ""
+) => {
   try {
-    const parsed = {};
-    const formData = new FormData(form);
-    for (const [k, v] of formData.entries()) {
-      parsed[k] = v;
-    }
-    return isStringfy ? JSON.stringify(parsed) : parsed;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-// 요청 url은 form의 action 값
-// method는 form의 method 값
-async function fetchSubmitReady(form = null, requestURL = "") {
-  try {
-    const formData = getFormData(form, true);
     const params = {
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: formData,
       method: form.method,
     };
@@ -196,48 +116,117 @@ async function fetchSubmitReady(form = null, requestURL = "") {
   } catch (err) {
     console.log("Failed to fetch error messages : ", err);
   }
-}
+};
 
-function formValidation(formId = "", moveToPath = "", requestURL = "") {
-  if (isEmpty(formId) || isEmpty(moveToPath)) {
-    return;
-  }
-  const form = document.getElementById(formId);
-  if (isEmpty(form)) {
-    return;
-  }
-  form.addEventListener("submit", async (e) => {
+const formValidation = (
+  formDoc = null,
+  moveToPath = "",
+  requestURL = "",
+  ...otherArg
+) => {
+  if (isEmpty(moveToPath) || isEmpty(formDoc) || isEmpty(requestURL)) return;
+
+  formDoc.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-      const { response } = await fetchSubmitReady(form, requestURL);
-      if (!isEmpty(response) && isEmpty(response.errors)) {
-        form.submit();
-        moveTo(moveToPath);
-      } else if (!isEmpty(response.errors)) {
-        errorRender(response.errors);
+      const { customFn, addingFormData } = getArguments(
+        otherArg,
+        "addingFormData",
+        "customFn"
+      );
+      const formData = formDataProcessing(formDoc, addingFormData);
+      const submitCoreFunctionExecution = async () => {
+        const { response } = await fetchResponseReady(
+          formDoc,
+          formData,
+          requestURL
+        );
+        const { errors } = response;
+        if (isNotEmpty(response) && isEmpty(errors)) {
+          formDoc.submit();
+          moveTo(moveToPath);
+        } else if (isNotEmpty(errors)) {
+          errorRender(formDoc, errors);
+        }
+      };
+      // customFn이 있을 때
+      if (isNotEmpty(customFn)) {
+        let result = {};
+        customFn(result);
+        if (result.success) {
+          await submitCoreFunctionExecution();
+        } else {
+          console.log("custom function failed.");
+        }
+      }
+      // customFn이 없을 때
+      else {
+        await submitCoreFunctionExecution();
       }
     } catch (err) {
       console.log(err);
     }
   });
-}
+};
 
-function entry() {
+const entry = () => {
   try {
     // 글 생성 시 사용되는 폼 유효성 검사
-    formValidation("post-create", "/posts", "/posts");
+    formValidation(queryDocuments("#post-create"), "/posts", "/posts");
     // 글 수정 시 사용되는 폼 유효성 검사
     const path = window.location.pathname.replace("/edit", "");
-    formValidation("post-edit", path, `${path}?_method=PUT`);
+    formValidation(queryDocuments("#post-edit"), path, `${path}?_method=PUT`);
     // 글 삭제 시 사용되는 폼 유효성 검사
+    formValidation(
+      queryDocuments("#post-destroy"),
+      "/posts",
+      `${path}?_method=DELETE`,
+      {
+        customFn: (result) => {
+          result["success"] = confirm(
+            "Are you sure you want to delete this post?"
+          );
+        },
+      }
+    );
+
     // 댓글 생성 시 사용되는 폼 유효성 검사
-    // 댓글 수정 시 사용되는 폼 유효성 검사
+    const commentCreateForm = queryDocuments("#comment-create");
+    if (isNotEmpty(commentCreateForm)) {
+      formValidation(commentCreateForm, path, "/comment", {
+        addingFormData: {
+          post_id: commentCreateForm.dataset.postId,
+        },
+      });
+    }
+    // 댓글 수정 시 사용되는 수정 버튼 보이는지 유무와 폼 유효성 검사
+    const commentEditBtn = queryDocuments("#action-edit, #edit-cancel", true);
+    if (isNotEmpty(commentEditBtn)) {
+      commentEditBtn.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          editFormToggle(e, btn);
+        });
+      });
+    }
+
+    const commentEditForm = queryDocuments("#comment-edit", true);
+    if (isNotEmpty(commentEditForm)) {
+      commentEditForm.forEach((editForm) => {
+        const originPath = window.location.origin;
+        const subpath = editForm.action.replace(originPath, "");
+        formValidation(editForm, path, subpath, {
+          addingFormData: { post_id: editForm.dataset.postId },
+        });
+      });
+    }
+
     // 댓글 삭제 시 사용되는 폼 유효성 검사
     // 사용자 생성 시 사용되는 폼 유효성 검사
     // 사용자 수정 시 사용되는 폼 유효성 검사
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 entry();
