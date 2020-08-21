@@ -2,7 +2,7 @@ import Comment from "../models/Comment";
 import Post from "../models/Post";
 import utils from "../utils";
 
-const createComment = utils.asyncWrap(async (req, res) => {
+const createComment = utils.asyncWrap(async (req, res, next) => {
   try {
     const payload = { ...req.body };
     payload.author = req.user._id;
@@ -14,7 +14,7 @@ const createComment = utils.asyncWrap(async (req, res) => {
   }
 });
 
-const updateComment = utils.asyncWrap(async (req, res) => {
+const updateComment = utils.asyncWrap(async (req, res, next) => {
   try {
     const payload = {
       text: req.body.text,
@@ -31,7 +31,7 @@ const updateComment = utils.asyncWrap(async (req, res) => {
   }
 });
 
-const destoryComment = utils.asyncWrap(async (req, res) => {
+const destoryComment = utils.asyncWrap(async (req, res, next) => {
   try {
     await Comment.deleteOne({ _id: req.params.object_id });
     return res.json({ response: true });
