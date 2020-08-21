@@ -8,7 +8,7 @@ const commentSchema = new mongoose.Schema(
       required: true,
     },
     parentComment: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },
-    text: { type: String, required: [true, "comment is required!"] },
+    text: { type: String, required: [true, "Comment is required!"] },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date },
     isDeleted: { type: Boolean },
