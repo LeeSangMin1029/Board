@@ -27,23 +27,6 @@ document.querySelectorAll(".page").forEach((btn) => {
   });
 });
 
-// const form = document.querySelector("form");
-// form.addEventListener("submit", async (e) => {
-//   e.preventDefault();
-//   try {
-//     console.log("submit");
-//     const formdata = new FormData(form);
-//     const result = await fetch("/posts", { method: "GET" });
-//     if (result.ok) {
-//       console.log("success");
-//     } else {
-//       console.log("failed", result.status);
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
 function renderErrorMsg(err) {
   document.getElementById("tbody-posts").innerHTML = `<tr>${err}</tr>`;
 }

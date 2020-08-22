@@ -1,5 +1,4 @@
 const errorListen = {};
-errorListen.serverStatus = (err, req, res, next) => {};
 errorListen.mongooseValidator = (err, req, res, next) => {
   const responseObject = {};
   responseObject.errors = errorHandler(err);
