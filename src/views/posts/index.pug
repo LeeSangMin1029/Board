@@ -1,5 +1,4 @@
 extends ../components/partial/layout.pug
-include ../components/form/formChildNode.pug
 
 block append style
   link(rel="stylesheet" type="text/css" href="/static/css/paginate.css")
@@ -11,12 +10,6 @@ block content
   .main-container
     #index-header
       h4 Board
-      #search-contents
-        label(for="serachText"): h4 search
-        form(method="POST")
-          fieldset
-            +userInputTag("input", "serachText", "searchText", "uit", "input text")
-            button.btn(type="submit") search
     table
       thead
         tr
