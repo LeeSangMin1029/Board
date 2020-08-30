@@ -159,3 +159,11 @@ fieldset {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+h4 {
+  display: inline;
+}
+
+#search-form {
+  float: right;
+}

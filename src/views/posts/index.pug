@@ -10,6 +10,7 @@ block content
   .main-container
     #index-header
       h4 Board
+      +searchForm()
     table
       thead
         tr
@@ -41,3 +42,8 @@ mixin tablebody(posts)
         td: a.post-link.txt-hidden(href=`/posts/${post._id}`)= `${post.title}`
         td= `${post.author.name}`
         td= `${post.createdAt}`
+
+mixin searchForm()
+  form(action="/posts/search" method="GET" id="search-form" novalidate)
+    input(type="text" placeholder="search..." name="search")/
+    button.btn(type="submit") submit
