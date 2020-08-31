@@ -1,4 +1,5 @@
 extends ../components/partial/layout.pug
+include ../components/form/formChildNode.pug
 
 block append style
   link(rel="stylesheet" type="text/css" href="/static/css/paginate.css")
@@ -45,5 +46,7 @@ mixin tablebody(posts)
 
 mixin searchForm()
   form(action="/posts/search" method="GET" id="search-form" novalidate)
-    input(type="text" placeholder="search..." name="search")/
-    button.btn(type="submit") submit
+    fieldset
+      .input-area
+        +userInputTag("input", "search", "q", "uit", "search...")
+      button.btn(type="submit") submit
