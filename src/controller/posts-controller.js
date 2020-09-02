@@ -38,33 +38,22 @@ const createPost = utils.asyncWrap(async (req, res, next) => {
 
 const renderPosts = utils.asyncWrap(async (req, res, next) => {
   try {
-    const { pageInfo } = res;
-    const { posts, pageCount } = await queryApplyPostsInfo(pageInfo);
-    return res.render("posts/index", {
+    const { searchQuery } = createSearchQuery(req);
+    const { posts, pageCount, currentPage } = await queryApplyPosts(
+      res,
+      searchQuery
+    );
+    const renderElements = {
       posts: posts,
       count: pageCount,
-      currentPage: pageInfo.page,
-    });
-  } catch (err) {
-    console.log(err);
-    return next(err);
-  }
-});
-
-const getPaginatedPosts = utils.asyncWrap(async (req, res, next) => {
-  try {
-    const { pageInfo } = res;
-    const { posts, pageCount } = await queryApplyPostsInfo(pageInfo);
+      currentPage: currentPage,
+    };
     return res.format({
-      "text/html": function () {
-        return res.render("posts/index", {
-          posts: posts,
-          count: pageCount,
-          currentPage: pageInfo.page,
-        });
-      },
       "application/json": function () {
-        return res.json({ posts: posts });
+        return res.json(renderElements);
+      },
+      "text/html": function () {
+        return res.render("posts/index", renderElements);
       },
     });
   } catch (err) {
@@ -137,11 +126,27 @@ const deletePost = utils.asyncWrap(async (req, res, next) => {
 
 function getQueryString(req, res, next) {
   const result = {};
-  result.page = req.params.page ? req.params.page : 1;
+  result.page = req.query.page ? req.query.page : 1;
   result.limit = 5;
   result.startIndex = (result.page - 1) * result.limit;
-  res.pageInfo = result;
+  res.subject = {};
+  res.subject.pageInfo = result;
   next();
+}
+
+function createSearchQuery({ query }) {
+  const result = {};
+  if (
+    typeof query !== "undefined" ||
+    (Object.keys(query.search).length !== 0 &&
+      query.search.constructor === Object)
+  ) {
+    const regexQuery = { $regex: new RegExp(query.search, "i") };
+    result.searchQuery = {
+      $or: [{ title: regexQuery }],
+    };
+  }
+  return result;
 }
 
 const checkPermission = utils.asyncWrap(async (req, res, next) => {
@@ -159,20 +164,27 @@ export {
   renderNewPost,
   renderEditPost,
   renderPosts,
-  createPost,
   renderPost,
-  getPaginatedPosts,
+  createPost,
   updatePost,
   deletePost,
   checkPermission,
   getQueryString,
 };
 
-async function queryApplyPostsInfo(pageInfo) {
-  const postLength = await Post.countDocuments();
-  const pageCount = utils.getPageCount(postLength, pageInfo.limit);
-  const posts = getModelArray(
-    await Post.aggregate([
+async function queryApplyPosts({ subject }, searchQuery = {}) {
+  try {
+    const { pageInfo } = subject;
+    const aggregateQuery = [];
+    let postLength = await Post.countDocuments();
+    if (
+      Object.keys(searchQuery).length !== 0 &&
+      searchQuery.constructor === Object
+    ) {
+      postLength = await Post.countDocuments(searchQuery);
+      aggregateQuery.push({ $match: searchQuery });
+    }
+    aggregateQuery.push(
       {
         $lookup: {
           from: "users",
@@ -185,14 +197,22 @@ async function queryApplyPostsInfo(pageInfo) {
       { $project: { name: 0 } },
       { $sort: { createdAt: -1 } },
       { $skip: pageInfo.startIndex },
-      { $limit: pageInfo.limit },
-    ]),
-    "YYYY-MM-DD"
-  );
-  return {
-    posts: posts,
-    pageCount: pageCount,
-  };
+      { $limit: pageInfo.limit }
+    );
+    const pageCount = utils.getPageCount(postLength, pageInfo.limit);
+    const posts = getModelArray(
+      await Post.aggregate(aggregateQuery),
+      "YYYY-MM-DD"
+    );
+    return {
+      posts: posts,
+      pageCount: pageCount,
+      currentPage: pageInfo.page,
+    };
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
 }
 
 function getModelArray(models, format) {
