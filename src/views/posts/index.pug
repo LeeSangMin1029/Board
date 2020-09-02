@@ -30,11 +30,9 @@ mixin pagination()
   div.paginate: div.page-wrap
     - for (let i = 1; i <= count; i++)
       - if(currentPage==i)
-        button.page.current-page(href=`/posts/page/${i}`)
-          em.num-page= i
+        button.page.current-page: em.num-page= i
       - else
-        button.page(href=`/posts/page/${i}`)
-          em.num-page= i
+        button.page: em.num-page= i
 
 mixin tablebody(posts)
   tbody#tbody-posts
@@ -45,8 +43,8 @@ mixin tablebody(posts)
         td= `${post.createdAt}`
 
 mixin searchForm()
-  form(action="/posts/search" method="GET" id="search-form" novalidate)
+  form(action="/posts" method="GET" id="search-form" novalidate)
     fieldset
       .input-area
-        +userInputTag("input", "search", "q", "uit", "search...")
+        +userInputTag("input", "search", "search", "uit", "search...")
       button.btn(type="submit") submit
