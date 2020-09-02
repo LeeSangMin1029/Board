@@ -10,10 +10,6 @@ posts
   .get(postsCtrl.getQueryString, postsCtrl.renderPosts)
   .post(utils.isLogged, upload.none(), postsCtrl.createPost);
 
-posts
-  .route("/page/:page")
-  .get(postsCtrl.getQueryString, postsCtrl.getPaginatedPosts);
-
 posts.get("/new", utils.isLogged, postsCtrl.renderNewPost);
 
 posts
