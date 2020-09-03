@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --experimental-specifier-resolution=node",
+    "start:dev" : "nodemon --experimental-specifier-resolution=node",
     "test": "jest --coverage",
     "test:watch": "jest --watch--coverage"
   },
