@@ -63,13 +63,11 @@ div#comment {
   color: #a9a9a9;
 }
 
-#action-delete:hover,
 #action-edit:hover {
   cursor: pointer;
 }
 
-#action-delete,
-#comment-destroy,
+#comment-delete,
 #action-edit {
   display: inline-block;
 }
