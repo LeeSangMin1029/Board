@@ -22,7 +22,8 @@ block content
     #post-footer
       a.btn(href="/posts") Back
       - if(isAuthenticated && post.author && currentUser._id.toString() === post.author._id.toString())
-        form(action=`/posts/${post._id}` method="POST" id="post-destroy" style="display:inline"): button.btn.mlr(type="submit") Delete
+        form(action=`/posts/${post._id}?_method=DELETE` method="POST" style="display:inline" id="post-delete")
+          a.btn.mlr(href="javascript:void(0)") Delete
         a.btn(href=`/posts/${post._id}/edit`) Edit
     
     - if(comments.length > 0 || isAuthenticated)
@@ -54,8 +55,8 @@ mixin commentsRender(comments)
             - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
               #action
                 a#action-edit edit
-                form(action=`/comment/${comment._id}?_method=DELETE` mehtod="POST" id="comment-destroy" enctype="multipart/form-data")
-                  a#action-delete.ml(type="submit") delete
+                form(action=`/comment/${comment._id}?_method=DELETE` method="POST" id="comment-delete")
+                  a.ml(href="javascript:void(0)") delete
           #comment-edit-toggle(hidden)
             - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
               form(action=`/comment/${comment._id}?_method=PUT` id="comment-edit" method="POST" enctype="multipart/form-data" novalidate
