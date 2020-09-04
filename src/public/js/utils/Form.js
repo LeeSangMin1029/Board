@@ -18,4 +18,39 @@ const submitConfirm = (
   } catch (err) {}
 };
 
-export { submitConfirm, getDocuments, isEmpty, isNotEmpty };
+class FormValidate {
+  constructor(selector = "") {
+    let tmpDoc = {};
+    if (isNotEmpty(selector)) {
+      tmpDoc = getDocuments(selector);
+    } else {
+      tmpDoc = {};
+    }
+    this.form = tmpDoc;
+    this.formData = new FormData(tmpDoc);
+  }
+
+  get data() {
+    return this.formData;
+  }
+
+  set data(form) {
+    this.formData = new FormData(form);
+  }
+
+  addSubmitEvent(customFn = {}) {
+    this.form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      try {
+        if (typeof customFn === "function") {
+          const target = customFn.bind(this, e);
+          target(e);
+        } else throw new Error("This object is not a function");
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  }
+}
+
+export { FormValidate, submitConfirm, getDocuments, isEmpty, isNotEmpty };
