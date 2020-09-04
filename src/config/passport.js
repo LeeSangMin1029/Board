@@ -24,23 +24,24 @@ passport.use(
       passwordField: "password",
     },
     async function (email, password, done) {
-      let user;
-      let errors = {};
       try {
-        user = await User.findOne({ email: email }).select({
+        const user = await User.findOne({ email: email }).select({
           password: 1,
         });
         if (!user) {
-          errors.email = { message: "Invalid email" };
+          return done(null, false, {
+            errors: "Email and Password you entered does not exist",
+          });
         } else {
           if (!(await user.authenticate(password))) {
-            errors.password = { message: "Invalid password" };
+            return done(null, false, {
+              errors: "Email and Password you entered does not exist.",
+            });
           }
         }
-        return done(null, user, { errors: errors });
+        return done(null, user, { response: true });
       } catch (err) {
-        console.log(err);
-        return done(err);
+        return done(null, false);
       }
     }
   )
