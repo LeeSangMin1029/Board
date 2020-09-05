@@ -6,14 +6,14 @@ import {
 } from "../utils/Form.js";
 
 const createForm = new FormValidate("#post-create");
-createForm.addSubmitEvent(async function (e) {
+createForm.addSubmitEvent(async function () {
   try {
     const fetched = await fetch("/posts", {
-      body: this.data,
+      body: this.formData,
       method: "POST",
     });
-    return await fetched.json();
+    const { response } = await fetched.json();
   } catch (err) {
     console.log(err);
   }
-});
+}, true);
