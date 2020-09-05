@@ -10,4 +10,8 @@ const getDocuments = (selector = "", isAll = false) => {
   } catch (err) {}
 };
 
-export { getDocuments, isEmpty, isNotEmpty };
+const showAlert = (target, errors) => {
+  console.log(target, errors);
+};
+
+export { getDocuments, showAlert, isEmpty, isNotEmpty };
