@@ -30,7 +30,7 @@ const createPost = utils.asyncWrap(async (req, res, next) => {
       body: req.body.body,
     });
     await post.save();
-    return res.json({ response: true });
+    return res.json({ response: { success: true } });
   } catch (err) {
     return next(err);
   }
@@ -108,7 +108,7 @@ const updatePost = utils.asyncWrap(async (req, res, next) => {
     await Post.updateOne({ _id: req.params.id }, postPayload, {
       runValidators: true,
     });
-    return res.json({ response: true });
+    return res.json({ response: { success: true } });
   } catch (err) {
     return next(err);
   }

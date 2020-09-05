@@ -20,7 +20,7 @@ const renderLoginForm = utils.asyncWrap(async (req, res, next) => {
 const userLogin = (req, res) => {
   passport.authenticate("local", function (err, user, info) {
     if (err) {
-      return res.json({ errors: err });
+      return res.json({ response: { errors: err } });
     }
     const errors = {};
     const { email, password } = req.body;
@@ -30,13 +30,13 @@ const userLogin = (req, res) => {
       else {
         errors.global = info.errors;
       }
-      return res.json({ errors: errors });
+      return res.json({ response: { errors: errors } });
     }
     return req.login(user, (err) => {
       if (err) {
-        return res.json({ errors: err });
+        return res.json({ response: { errors: err } });
       }
-      return res.json({ response: true });
+      return res.json({ response: { success: true } });
     });
   })(req, res);
 };

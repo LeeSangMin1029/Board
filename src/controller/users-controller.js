@@ -19,7 +19,7 @@ const createUser = utils.asyncWrap(async (req, res) => {
       passwordConfirmation: req.body.passwordConfirmation,
     });
     await user.save();
-    return res.json({ response: true });
+    return res.json({ response: { success: true } });
   } catch (err) {
     return next(err);
   }
@@ -62,7 +62,7 @@ const updateUser = utils.asyncWrap(async (req, res) => {
     user.password = req.body.newPassword ? req.body.newPassword : user.password;
     for (const p in req.body) user[p] = req.body[p];
     await user.save();
-    return res.json({ response: true });
+    return res.json({ response: { success: true } });
   } catch (err) {
     return next(err);
   }

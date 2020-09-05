@@ -8,7 +8,7 @@ const createComment = utils.asyncWrap(async (req, res, next) => {
     payload.author = req.user._id;
     payload.post = res.locals.post._id;
     await Comment.create(payload);
-    return res.json({ response: true });
+    return res.json({ response: { success: true } });
   } catch (err) {
     return next(err);
   }
@@ -25,7 +25,7 @@ const updateComment = utils.asyncWrap(async (req, res, next) => {
     await Comment.updateOne({ _id: req.params.object_id }, payload, {
       runValidators: true,
     });
-    return res.json({ response: true });
+    return res.json({ response: { success: true } });
   } catch (err) {
     return next(err);
   }
@@ -34,7 +34,7 @@ const updateComment = utils.asyncWrap(async (req, res, next) => {
 const destoryComment = utils.asyncWrap(async (req, res, next) => {
   try {
     await Comment.deleteOne({ _id: req.params.object_id });
-    return res.json({ response: true });
+    return res.json({ response: { success: true } });
   } catch (err) {
     return next(err);
   }
