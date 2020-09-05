@@ -5,17 +5,15 @@ import {
   isNotEmpty,
 } from "../utils/Form.js";
 
-const execute = async function (e) {
+const createForm = new FormValidate("#post-create");
+createForm.addSubmitEvent(async function (e) {
   try {
-    const fetced = await fetch("/posts", {
+    const fetched = await fetch("/posts", {
       body: this.data,
       method: "POST",
     });
-    console.log(await fetced.json());
+    return await fetched.json();
   } catch (err) {
     console.log(err);
   }
-};
-
-const createForm = new FormValidate("#post-create");
-createForm.addSubmitEvent(execute);
+});
