@@ -27,6 +27,14 @@ utils.isLogged = (req, res, next) => {
   }
 };
 
+utils.isNotLogged = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.redirect("/");
+  } else {
+    next();
+  }
+};
+
 utils.noPermission = (req, res) => {
   req.logout();
   res.redirect("/login");
