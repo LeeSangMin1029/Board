@@ -26,7 +26,11 @@ class FormValidate {
   }
 
   get data() {
-    return this.formData;
+    const formData = {};
+    for (const [key, value] of this.formData.entries()) {
+      formData[key] = value;
+    }
+    return formData;
   }
 
   set data(form) {
@@ -35,11 +39,6 @@ class FormValidate {
 
   update() {
     try {
-      const prevData = this.data;
-      this.data();
-      for (const elements of prevData.entries()) {
-        console.log(elements);
-      }
     } catch (err) {
       console.log(err);
     }
@@ -48,8 +47,8 @@ class FormValidate {
   addSubmitEvent(customFn = {}) {
     this.form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      this.update();
       try {
-        this.update();
         if (typeof customFn === "function") {
           const target = customFn.bind(this, e);
           const result = await target(e);
