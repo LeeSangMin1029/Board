@@ -1,4 +1,4 @@
-import { getDocuments, isEmpty, isNotEmpty } from "./Doc.js";
+import { getDocuments, showAlert, isEmpty, isNotEmpty } from "./Doc.js";
 
 const confirmSuccess = (formDoc) => {
   formDoc.submit();
@@ -60,8 +60,13 @@ class FormValidate {
       }
     });
   }
-
-  showAlert(errors) {}
 }
 
-export { FormValidate, submitConfirm, getDocuments, isEmpty, isNotEmpty };
+export {
+  FormValidate,
+  submitConfirm,
+  showAlert,
+  getDocuments,
+  isEmpty,
+  isNotEmpty,
+};
