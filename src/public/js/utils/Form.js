@@ -26,11 +26,11 @@ class FormValidate {
   }
 
   get data() {
-    const formData = {};
-    for (const [key, value] of this.formData.entries()) {
-      formData[key] = value;
+    const parsed = {};
+    for (const [key, value] of this.formData) {
+      parsed[key] = value;
     }
-    return formData;
+    return parsed;
   }
 
   set data(form) {
@@ -39,28 +39,29 @@ class FormValidate {
 
   update() {
     try {
+      this.data = this.form;
     } catch (err) {
       console.log(err);
     }
   }
 
-  addSubmitEvent(customFn = {}) {
+  addSubmitEvent(customFn = {}, prevent = false) {
+    let execute = {};
+    if (typeof customFn === "function") execute = customFn.bind(this);
+    else throw new Error("This object is not a function!");
+
     this.form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      this.update();
+      prevent ? e.preventDefault() : null;
       try {
-        if (typeof customFn === "function") {
-          const target = customFn.bind(this, e);
-          const result = await target(e);
-          // this.renderError(result);
-        } else throw new Error("This object is not a function");
+        this.update();
+        execute();
       } catch (err) {
         console.log(err);
       }
     });
   }
 
-  renderError(errors) {}
+  showAlert(errors) {}
 }
 
 export { FormValidate, submitConfirm, getDocuments, isEmpty, isNotEmpty };
