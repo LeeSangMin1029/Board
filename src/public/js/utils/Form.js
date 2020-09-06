@@ -1,4 +1,4 @@
-import { getDocuments, showAlert, isEmpty, isNotEmpty } from "./Doc.js";
+import { getDocuments, addEvent, isEmpty, isNotEmpty } from "./Doc.js";
 
 const confirmSuccess = (formDoc) => {
   formDoc.submit();
@@ -37,36 +37,9 @@ class FormValidate {
     this.formData = new FormData(form);
   }
 
-  update() {
-    try {
-      this.data = this.form;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  addSubmitEvent(customFn = {}, prevent = false) {
-    let execute = {};
-    if (typeof customFn === "function") execute = customFn.bind(this);
-    else throw new Error("This object is not a function!");
-
-    this.form.addEventListener("submit", async (e) => {
-      prevent ? e.preventDefault() : null;
-      try {
-        this.update();
-        execute();
-      } catch (err) {
-        console.log(err);
-      }
-    });
+  submitEvent(bindingFn = {}, prevent = false, useCapture = false) {
+    addEvent.call(this, this.form, "submit", bindingFn, prevent, useCapture);
   }
 }
 
-export {
-  FormValidate,
-  submitConfirm,
-  showAlert,
-  getDocuments,
-  isEmpty,
-  isNotEmpty,
-};
+export { FormValidate, submitConfirm, getDocuments, isEmpty, isNotEmpty };

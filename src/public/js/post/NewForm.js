@@ -20,25 +20,3 @@ createForm.submitEvent(async function () {
     console.log(err);
   }
 }, true);
-
-// createForm.focusEvent(
-//   async function (e, doc) {
-//     try {
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   },
-//   false,
-//   true
-// );
-
-// createForm.blurEvent(
-//   async function (e, doc) {
-//     try {
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   },
-//   false,
-//   true
-// );
