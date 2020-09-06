@@ -62,7 +62,7 @@ const errorRender = (form = null, errors = []) => {
       .closest(".input-area");
     const uitTag = inputAreaDoc.querySelector(".uit");
     if (isNotEmpty(uitTag)) {
-      let tmpMessage = errors[name[i]].message;
+      let tmpMessage = errors[name[i]];
       inputAreaDoc.setAttribute(attName, tmpMessage);
       uitTag.addEventListener("focusin", (e) => {
         inputAreaDoc.removeAttribute(attName);
