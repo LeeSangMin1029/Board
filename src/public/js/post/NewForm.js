@@ -1,15 +1,11 @@
-import {
-  FormValidate,
-  getDocuments,
-  showAlert,
-  isEmpty,
-  isNotEmpty,
-} from "../utils/Form.js";
+import { FormValidate } from "../utils/Form.js";
+import { alertAllError } from "../utils/Doc.js";
 import { navigateToURL } from "../utils/Util.js";
 
 const createForm = new FormValidate("#post-create");
-createForm.addSubmitEvent(async function () {
+createForm.submitEvent(async function () {
   try {
+    this.data = this.form;
     const fetched = await fetch("/posts", {
       body: this.formData,
       method: "POST",
@@ -18,9 +14,31 @@ createForm.addSubmitEvent(async function () {
     if (response.success) {
       navigateToURL("/");
     } else {
-      showAlert(this.form, response.errors);
+      alertAllError(response.errors, "error-messages");
     }
   } catch (err) {
     console.log(err);
   }
 }, true);
+
+// createForm.focusEvent(
+//   async function (e, doc) {
+//     try {
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   },
+//   false,
+//   true
+// );
+
+// createForm.blurEvent(
+//   async function (e, doc) {
+//     try {
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   },
+//   false,
+//   true
+// );
