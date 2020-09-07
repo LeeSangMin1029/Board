@@ -1,3 +1,5 @@
+import { isNotEmpty } from "./ObjectValidation.js";
+
 const navigateToURL = (targetURL = "") => {
   try {
     if (isNotEmpty(targetURL)) {
@@ -8,4 +10,10 @@ const navigateToURL = (targetURL = "") => {
   }
 };
 
-export { navigateToURL };
+const partial = function (func, ...argsBound) {
+  return function (...args) {
+    return func.call(this, ...argsBound, ...args);
+  };
+};
+
+export { navigateToURL, partial };

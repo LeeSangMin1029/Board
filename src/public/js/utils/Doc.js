@@ -1,35 +1,43 @@
-import { isEmpty, isNotEmpty } from "./ObjectValidation.js";
+import { isEmpty } from "./ObjectValidation.js";
 
 const getDocuments = (selector = "", isAll = false) => {
+  if (isEmpty(selector)) return;
   try {
-    if (isNotEmpty(selector)) {
-      return isAll
-        ? document.querySelectorAll(selector)
-        : document.querySelector(selector);
-    }
+    return isAll
+      ? document.querySelectorAll(selector)
+      : document.querySelector(selector);
   } catch (err) {}
 };
 
 const addEvent = function (
   doc,
   eventName = "",
-  bindingFn = {},
+  callFunc = {},
   prevent = false,
   useCapture = false
 ) {
-  let execute = {};
-  if (typeof bindingFn === "function") execute = bindingFn.bind(this);
-  else throw new Error("This bindingFn is not a function!");
+  if (!typeof callFunc === "function") return;
   doc.addEventListener(
     eventName,
-    (e) => {
+    function (e) {
       prevent ? e.preventDefault() : null;
       try {
-        execute(e, doc);
+        callFunc.call(this, e);
       } catch (err) {}
     },
     useCapture
   );
+};
+
+const nodeListAddEvent = (eachDoc, callFunc) => {
+  if (
+    !NodeList.prototype.isPrototypeOf(eachDoc) ||
+    !typeof callFunc === "function"
+  )
+    return;
+  eachDoc.forEach((doc) => {
+    callFunc.call(this, doc);
+  });
 };
 
 const alertError = (targetDocument = {}, errorMsg = "", attrName = "") => {
@@ -40,17 +48,4 @@ const alertError = (targetDocument = {}, errorMsg = "", attrName = "") => {
   }
 };
 
-const alertAllError = (errors, attrName) => {
-  for (const [k, v] of Object.entries(errors)) {
-    alertError(getDocuments(`#${k}`).parentNode, v, attrName);
-  }
-};
-
-export {
-  getDocuments,
-  addEvent,
-  alertError,
-  alertAllError,
-  isEmpty,
-  isNotEmpty,
-};
+export { getDocuments, addEvent, nodeListAddEvent, alertError };
