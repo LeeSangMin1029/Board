@@ -1,22 +1,26 @@
-import { FormValidate } from "../utils/Form.js";
-import { alertAllError } from "../utils/Doc.js";
+import { getDocuments } from "../utils/Doc.js";
 import { navigateToURL } from "../utils/Util.js";
 
-const createForm = new FormValidate("#post-create");
-createForm.submitEvent(async function () {
+const createFormSubmit = async function () {
   try {
-    this.data = this.form;
+    const formData = new FormData(this);
     const fetched = await fetch("/posts", {
-      body: this.formData,
+      body: formData,
       method: "POST",
     });
-    const { response } = await fetched.json();
-    if (response.success) {
-      navigateToURL("/");
+    const {
+      response: { success = false, errors = {} },
+    } = await fetched.json();
+    if (success) {
+      navigateToURL("/posts");
     } else {
-      alertAllError(response.errors, "error-messages");
     }
   } catch (err) {
     console.log(err);
   }
-}, true);
+};
+
+(() => {
+  const createForm = getDocuments("#post-create");
+  addEvent(createForm, "submit", partial(createFormSubmit), true);
+})();
