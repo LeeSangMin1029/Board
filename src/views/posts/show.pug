@@ -2,7 +2,8 @@ extends ../components/partial/layout.pug
 include ../components/form/formChildNode.pug
 
 block append head
-  script(defer type="module" src="/static/js/post/index.js")
+  script(defer type="module" src="/static/js/comment/NewForm.js")
+  script(defer type="module" src="/static/js/comment/EditForm.js")
 
 block append style
   link(rel="stylesheet" href="/static/css/detail.css")/
@@ -55,8 +56,8 @@ mixin commentsRender(comments)
             - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
               #action
                 a#action-edit edit
-                form(action=`/comment/${comment._id}?_method=DELETE` method="POST" id="comment-delete")
-                  a.ml(href="javascript:void(0)") delete
+                form(action=`/comment/${comment._id}?_method=DELETE` method="POST" id="comment-delete" data-post-id=`${post._id}`)
+                  a.ml#action-delete(href="javascript:void(0)") delete
           #comment-edit-toggle(hidden)
             - if(isAuthenticated && post.author && currentUser._id.toString() === comment.author._id.toString())
               form(action=`/comment/${comment._id}?_method=PUT` id="comment-edit" method="POST" enctype="multipart/form-data" novalidate
@@ -65,4 +66,4 @@ mixin commentsRender(comments)
                   .input-area
                     +userInputTag("textarea", "text", "text", "uit", "comments")= comment.text
                   button.btn#edit-cancel Cancel
-                  button.btn.mtl(type="submit") Edit Comment
+                  button.btn.ml(type="submit") Edit Comment
