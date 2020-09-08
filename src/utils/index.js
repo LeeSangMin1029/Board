@@ -12,6 +12,7 @@ utils.asyncWrap = (asyncFn) => {
 };
 
 utils.dateFormatting = ({ date, formatString }) => {
+  if (!date || !formatString) return "";
   return moment(date).format(formatString);
 };
 
