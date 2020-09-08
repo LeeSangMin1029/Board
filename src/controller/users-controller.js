@@ -35,7 +35,7 @@ const renderUser = utils.asyncWrap(async (req, res, next) => {
     });
     if (typeof payload.updatedAt !== "undefined") {
       payload.updatedAt = utils.dateFormatting({
-        date: payload.updateAt,
+        date: payload.updatedAt,
         formatString: "YYYY-MM-DD HH:mm:ss",
       });
     }
@@ -61,10 +61,12 @@ const updateUser = utils.asyncWrap(async (req, res, next) => {
     );
     user.originalPassword = user.password;
     user.password = req.body.newPassword ? req.body.newPassword : user.password;
+    user.updatedAt = Date.now();
     for (const p in req.body) user[p] = req.body[p];
     await user.save();
     return res.json({ response: { success: true } });
   } catch (err) {
+    console.log(err);
     return next(err);
   }
 });
