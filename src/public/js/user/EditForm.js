@@ -12,8 +12,8 @@ const editFormSubmit = async function () {
       response: { success = false, errors = {} },
     } = await fetched.json();
     if (success) {
-      console.log(location);
-      navigateToURL("/");
+      const path = location.pathname.replace("/edit", "");
+      navigateToURL(path);
     } else {
       this.querySelectorAll(".input-area").forEach((input) => {
         if (input.hasAttribute("error-messages")) {
