@@ -87,8 +87,8 @@ userSchema.path("password").validate(async function (v) {
     if (!passwordRegexCheck.test(String(user.password))) {
       user.invalidate(
         "password",
-        "Input Password and Submit [8 to 15 characters which contain at least one lowercase letter,\
-one uppercase letter, one numeric digit, and one special character]"
+        "8 to 15 characters which contain at least one lowercase letter\n\
+one uppercase letter, one numeric digit, and one special character"
       );
     }
   }
@@ -105,12 +105,30 @@ one uppercase letter, one numeric digit, and one special character]"
     ) {
       user.invalidate("currentPassword", "Current Password is invalid!");
     }
-    // 새로 입력한 비밀번호와 그 비밀번호를 확인하는 입력한 비밀번호가 다를 때
-    if (user.newPassword !== user.passwordConfirmation) {
-      user.invalidate(
-        "passwordConfirmation",
-        "Password Confirmation does not matched!"
-      );
+    // 새로운 비밀번호 값이 있을 때
+    if (user.newPassword) {
+      // 다시 확인하는 비밀번호 값이 없을 때
+      if (!user.passwordConfirmation) {
+        user.invalidate(
+          "passwordConfirmation",
+          "Confirm Password is required!"
+        );
+      }
+      // 새로 입력한 비밀번호와 그 비밀번호를 확인하는 입력한 비밀번호가 다를 때
+      if (user.newPassword !== user.passwordConfirmation) {
+        user.invalidate(
+          "passwordConfirmation",
+          "Password Confirmation does not matched!"
+        );
+      }
+      // 새로운 비밀번호의 값이 정규식 검사
+      if (!passwordRegexCheck.test(String(user.newPassword))) {
+        user.invalidate(
+          "newPassword",
+          "8 to 15 characters which contain at least one lowercase letter \
+          one uppercase letter, one numeric digit, and one special character"
+        );
+      }
     }
   }
 });
