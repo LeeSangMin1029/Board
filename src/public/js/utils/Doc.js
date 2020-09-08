@@ -40,12 +40,4 @@ const nodeListAddEvent = (eachDoc, callFunc) => {
   });
 };
 
-const alertError = (targetDocument = {}, errorMsg = "", attrName = "") => {
-  try {
-    targetDocument.setAttribute(attrName, errorMsg);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export { getDocuments, addEvent, nodeListAddEvent, alertError };
+export { getDocuments, addEvent, nodeListAddEvent };
