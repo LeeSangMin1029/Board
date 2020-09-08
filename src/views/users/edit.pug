@@ -10,7 +10,7 @@ block content
     form(action=`/users/${user._id}?_method=PUT` method="POST" id="user-edit" enctype="multipart/form-data" novalidate)
       fieldset
         .input-area
-          label(for="currentPw")
+          label(for="currentPassword")
             h4 current password*
           +userInputTag("input", "currentPassword", "currentPassword", "uit", "current password", "password")
         .input-area
@@ -22,12 +22,12 @@ block content
             h4 id
           +userInputTag("input", "id", "id", "uit", "id")(value=user.id)
         .input-area
-          label(for="pw-new")
+          label(for="newPassword")
             h4 new password
-          +userInputTag("input", "pw-new", "newPassword", "uit", "new password", "password")
+          +userInputTag("input", "newPassword", "newPassword", "uit", "new password", "password")
         .input-area
-          label(for="pw-confirm")
+          label(for="passwordConfirmation")
             h4 password confirmation
-          +userInputTag("input", "pw-confirm", "passwordConfirmation", "uit", "confirm password", "password")
+          +userInputTag("input", "passwordConfirmation", "passwordConfirmation", "uit", "confirm password", "password")
         a.btn(href=`/users/${ user._id }`) Back
         button.btn.ml(type="submit") Update
