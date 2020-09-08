@@ -36,7 +36,7 @@ block content
           fieldset
             .input-area
               +userInputTag("textarea", "text", "text", "uit", "comments")
-            button.btn.mt(type="submit") Add Comment
+            button.btn(type="submit") Add Comment
     +commentsRender(comments)
 
 mixin commentsRender(comments)
