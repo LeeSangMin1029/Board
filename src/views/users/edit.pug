@@ -2,12 +2,12 @@ extends ../components/partial/layout.pug
 include ../components/form/formChildNode.pug
 
 block append head
-  script(defer type="module" src="/static/js/user/EditFormValidation.js")
+  script(defer type="module" src="/static/js/user/EditForm.js")
 
 block content
   .main-container
     h4 Edit User
-    form(action=`/users/${user._id}` method="POST" enctype="multipart/form-data" novalidate)
+    form(action=`/users/${user._id}` method="POST" id="user-edit" enctype="multipart/form-data" novalidate)
       fieldset
         .input-area
           label(for="currentPw")
