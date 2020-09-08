@@ -18,7 +18,6 @@ div.input-area .uit:focus {
 div.input-area[error-messages] .uit {
   border: 1px solid #c92432;
   border-color: #c92432;
-  color: #c92432;
   background: #fffafa;
 }
 
