@@ -33,10 +33,12 @@ const renderUser = utils.asyncWrap(async (req, res, next) => {
       date: payload.createdAt,
       formatString: "YYYY-MM-DD HH:mm:ss",
     });
-    payload.updatedAt = utils.dateFormatting({
-      date: payload.updatedAt,
-      formatString: "YYYY-MM-DD HH:mm:ss",
-    });
+    if (typeof payload.updatedAt !== "undefined") {
+      payload.updatedAt = utils.dateFormatting({
+        date: payload.updateAt,
+        formatString: "YYYY-MM-DD HH:mm:ss",
+      });
+    }
     return res.render("users/show", { user: payload });
   } catch (err) {
     return next(err);
