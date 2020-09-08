@@ -15,7 +15,12 @@ const editFormSubmit = async function () {
     if (success) {
       navigateToURL(location);
     } else {
-      console.log(errors);
+      Object.keys(errors).map((key) => {
+        this.childNodes[0].childNodes[0].setAttribute(
+          "error-messages",
+          errors[key]
+        );
+      });
     }
   } catch (err) {
     console.log(err);
@@ -48,10 +53,13 @@ const formViewToggle = (body, form) => {
 };
 
 const cancelBtnClick = (body, form) => {
-  if (!body || !form) return;
   try {
     const input = form.querySelector(".uit");
     inputValueCheck(input);
+    const inputArea = input.parentNode;
+    if (inputArea.hasAttribute("error-messages")) {
+      inputArea.removeAttribute("error-messages");
+    }
     formViewToggle(body, form);
   } catch (err) {
     console.log(err);
