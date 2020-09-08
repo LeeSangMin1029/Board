@@ -7,12 +7,12 @@ block append head
 block content
   .main-container
     h4 Edit User
-    form(action=`/users/${user._id}` method="POST" id="user-edit" enctype="multipart/form-data" novalidate)
+    form(action=`/users/${user._id}?_method=PUT` method="POST" id="user-edit" enctype="multipart/form-data" novalidate)
       fieldset
         .input-area
           label(for="currentPw")
             h4 current password*
-          +userInputTag("input", "currentPw", "currentPassword", "uit", "current password", "password")
+          +userInputTag("input", "currentPassword", "currentPassword", "uit", "current password", "password")
         .input-area
           label(for="name")
             h4 name
