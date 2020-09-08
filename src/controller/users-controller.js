@@ -9,7 +9,7 @@ const renderRegisterForm = (req, res, next) => {
   }
 };
 
-const createUser = utils.asyncWrap(async (req, res) => {
+const createUser = utils.asyncWrap(async (req, res, next) => {
   try {
     const user = new User({
       name: req.body.name,
@@ -25,7 +25,7 @@ const createUser = utils.asyncWrap(async (req, res) => {
   }
 });
 
-const renderUser = utils.asyncWrap(async (req, res) => {
+const renderUser = utils.asyncWrap(async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.params.object_id }).lean();
     const payload = { ...user };
@@ -43,8 +43,7 @@ const renderUser = utils.asyncWrap(async (req, res) => {
   }
 });
 
-const renderEditUser = utils.asyncWrap(async (req, res) => {
-  // 아이디, 이름, 이메일, 사진, 생성날짜, 수정날짜, 비밀번호 입력창 띄우기
+const renderEditUser = utils.asyncWrap(async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.params.object_id }).lean();
     return res.render("users/edit", { user: user });
@@ -53,7 +52,7 @@ const renderEditUser = utils.asyncWrap(async (req, res) => {
   }
 });
 
-const updateUser = utils.asyncWrap(async (req, res) => {
+const updateUser = utils.asyncWrap(async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.params.object_id }).select(
       "password"
