@@ -15,7 +15,12 @@ const createFormSubmit = async function () {
     if (success) {
       navigateToURL(location);
     } else {
-      // alertAllError(errors, "error-messages");
+      Object.keys(errors).map((key) => {
+        this.childNodes[0].childNodes[0].setAttribute(
+          "error-messages",
+          errors[key]
+        );
+      });
     }
   } catch (err) {
     console.log(err);
@@ -23,6 +28,11 @@ const createFormSubmit = async function () {
 };
 
 (() => {
-  const createForm = getDocuments("#comment-create");
-  addEvent(createForm, "submit", partial(createFormSubmit), true);
+  try {
+    const commentAdd = getDocuments("#comment-add");
+    const createForm = commentAdd.querySelector("#comment-create");
+    addEvent(createForm, "submit", partial(createFormSubmit), true);
+  } catch (err) {
+    console.log(err);
+  }
 })();
