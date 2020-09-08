@@ -14,7 +14,7 @@ import comments from "./routes/comments";
 
 const app = express();
 
-mongoose.connect("mongodb://localhost/test", {
+mongoose.connect("mongodb://localhost/board", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
