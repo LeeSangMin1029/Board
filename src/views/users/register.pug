@@ -2,12 +2,12 @@ extends ../components/partial/layout.pug
 include ../components/form/formChildNode.pug
 
 block append head
-  script(defer type="module" src="/static/js/user/RegisterFormValidation.js")
+  script(defer type="module" src="/static/js/user/RegisterForm.js")
 
 block content
   .main-container
     h4 New User
-    form(method="POST" enctype="multipart/form-data" novalidate)
+    form(method="POST" id="user-register" enctype="multipart/form-data" novalidate)
       fieldset
         .input-area
           label(for="name")
@@ -22,12 +22,12 @@ block content
             h4 id
           +userInputTag("input", "id", "id", "uit", "id")
         .input-area
-          label(for="pw-origin")
+          label(for="password")
             h4 password
-          +userInputTag("input", "pw-origin", "password", "uit", "password", "password")
+          +userInputTag("input", "password", "password", "uit", "password", "password")
         .input-area
-          label(for="pw-confirm")
+          label(for="passwordConfirmation")
             h4 confirm password
-          +userInputTag("input", "pw-confirm", "passwordConfirmation", "uit", "confirm password", "password")
+          +userInputTag("input", "passwordConfirmation", "passwordConfirmation", "uit", "confirm password", "password")
         a.btn(href="/") Back
         button.btn.ml(type="submit") Sign up
