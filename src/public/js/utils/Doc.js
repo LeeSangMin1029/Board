@@ -16,7 +16,7 @@ const addEvent = function (
   prevent = false,
   useCapture = false
 ) {
-  if (!typeof callFunc === "function") return;
+  if (!typeof callFunc === "function" || !doc) return;
   doc.addEventListener(
     eventName,
     function (e) {
