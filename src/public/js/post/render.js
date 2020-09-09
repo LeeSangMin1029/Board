@@ -1,4 +1,5 @@
 import { isEmpty } from "../utils/ObjectValidation.js";
+import { nodeListAddEvent, getDocuments, addEvent } from "../utils/Doc.js";
 
 const updateViewPage = async (queryObject, response) => {
   try {
@@ -27,73 +28,56 @@ const btnClickEvent = async function () {
       queryObject.search = searchText;
     }
     queryObject.page = page;
-    updateViewPage(queryObject, ({ posts }) => {
-      renderPosts(posts);
-    });
   } catch (err) {
     console.log(err);
   }
 };
 
-const pageAllButtons = document.querySelectorAll(".page");
-pageAllButtons.forEach((btn) => {
-  btn.addEventListener("click", btnClickEvent);
-});
-
-const searchForm = document.querySelector("#search-form");
-searchForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+const searchFormSubmit = async function () {
   try {
-    const formData = new FormData(searchForm);
+    const formData = new FormData(this);
     let searchText = formData.get("search");
-    const queryObject = {};
-    if (isEmpty(searchText)) {
-      searchText = "";
-    } else {
-      queryObject.search = searchText;
-    }
-    updateViewPage(queryObject, ({ posts, count, currentPage }) => {
-      renderPosts(posts);
-      pageAllButtons.forEach((btn) => {
-        btn.removeEventListener("click", btnClickEvent);
-      });
-      renderPageList(count, currentPage);
-      document.querySelectorAll(".page").forEach((btn) => {
-        btn.addEventListener("click", btnClickEvent);
-      });
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
+    const queryString = buildQueryString({ search: searchText });
 
-window.addEventListener("popstate", async function (e) {
-  try {
-    let page = getParameterByName("page");
-    let searchText = getParameterByName("search");
-    const queryObject = {};
-    if (isEmpty(page)) {
-      page = 1;
-    }
-    if (isEmpty(searchText)) {
-      searchText = "";
-    } else {
-      queryObject.search = searchText;
-    }
-    queryObject.page = page;
-    const prevClickedPage = document.querySelectorAll(".page")[page - 1];
-    currentPageToggle(prevClickedPage);
-    const queryString = buildQueryString(queryObject);
-    const { posts, count, currentPage } = await getPosts(queryString);
-    renderPosts(posts);
-    renderPageList(count, currentPage);
-    document.querySelectorAll(".page").forEach((btn) => {
-      btn.addEventListener("click", btnClickEvent);
-    });
+    // const requestPath = this.action + queryString;
+    // const fetched = await fetch(requestPath, {
+    //   body: formData,
+    //   method: "POST",
+    // });
+    // const { posts, count, currentPage } = await fetched.json();
+    // console.log(posts);
   } catch (err) {
     console.log(err);
   }
-});
+};
+
+// window.addEventListener("popstate", async function (e) {
+//   try {
+//     let page = getParameterByName("page");
+//     let searchText = getParameterByName("search");
+//     const queryObject = {};
+//     if (isEmpty(page)) {
+//       page = 1;
+//     }
+//     if (isEmpty(searchText)) {
+//       searchText = "";
+//     } else {
+//       queryObject.search = searchText;
+//     }
+//     queryObject.page = page;
+//     const prevClickedPage = document.querySelectorAll(".page")[page - 1];
+//     currentPageToggle(prevClickedPage);
+//     const queryString = buildQueryString(queryObject);
+//     const { posts, count, currentPage } = await getPosts(queryString);
+//     renderPosts(posts);
+//     renderPageList(count, currentPage);
+//     document.querySelectorAll(".page").forEach((btn) => {
+//       btn.addEventListener("click", btnClickEvent);
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 const currentPageToggle = (btnElements) => {
   try {
@@ -117,13 +101,13 @@ const getParameterByName = (name, url = window.location.href) => {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 };
 
-const buildQueryString = (params) => {
-  if (isEmpty(params)) {
-    return null;
-  }
-  return Object.keys(params)
-    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
-    .join("&");
+const buildQueryString = (params = {}) => {
+  if (isEmpty(params)) return;
+  return Object.keys(params).reduce((acc, cur) => {
+    const uriComp = encodeURIComponent;
+    const piece = `${uriComp(cur)}=${uriComp(params[cur])}`;
+    return acc + piece;
+  }, "?");
 };
 
 const renderPageList = (count = 0, currentPage = 0) => {
@@ -169,3 +153,16 @@ async function getPosts(queryString = "") {
     return await fetched.json();
   } catch (err) {}
 }
+
+(() => {
+  const pageAllButtons = getDocuments(".page", true);
+  nodeListAddEvent(pageAllButtons, (btn) => {
+    try {
+      addEvent(btn, "click", btnClickEvent);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  const searchForm = getDocuments("#search-form");
+  addEvent(searchForm, "submit", searchFormSubmit, true);
+})();
