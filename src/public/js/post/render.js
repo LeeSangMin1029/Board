@@ -1,4 +1,3 @@
-import { getData } from "../required/Request.js";
 import { isEmpty } from "../utils/ObjectValidation.js";
 
 const updateViewPage = async (queryObject, response) => {
@@ -127,43 +126,46 @@ const buildQueryString = (params) => {
     .join("&");
 };
 
-const renderPageList = (count, currentPage) => {
+const renderPageList = (count = 0, currentPage = 0) => {
+  if (!count || !currentPage) return;
   try {
     let result = "";
+    const pageWrap = document.querySelector(".page-wrap");
+    if (!pageWrap) return;
     for (let i = 1; i <= count; i++) {
       if (currentPage == i)
         result += `<button class="page current-page"><em class="num-page">${i}</em></button>`;
       else
         result += `<button class="page"><em class="num-page">${i}</em></button>`;
     }
-    document.querySelector(".page-wrap").innerHTML = result;
+    pageWrap.innerHTML = result;
   } catch (err) {
     console.log(err);
   }
 };
 
-function renderErrorMsg(err) {
-  document.getElementById("tbody-posts").innerHTML = `<tr>${err}</tr>`;
-}
-
-function renderPosts(posts) {
+function renderPosts(posts = {}) {
+  if (!posts) return;
   try {
     let result = "";
+    const bodyPosts = document.querySelector("#tbody-posts");
+    if (!bodyPosts) return;
     for (const post of posts) {
       result += `<tr><td><a href="/posts/${post._id}" class="txt-hidden">${post.title}</a></td>
         <td>${post.author.name}</td>
         <td>${post.createdAt}</td></tr>`;
     }
-    document.getElementById("tbody-posts").innerHTML = result;
+    bodyPosts.innerHTML = result;
   } catch (err) {}
 }
 
 async function getPosts(queryString = "") {
   try {
     let requestPath = "";
-    if (!isEmpty(queryString)) {
+    if (!queryString) {
       requestPath = `?${queryString}`;
     }
-    return await getData(`/posts${requestPath}`);
+    const fetched = await fetch(`/posts${requestPath}`);
+    return await fetched.json();
   } catch (err) {}
 }
