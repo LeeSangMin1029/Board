@@ -118,7 +118,7 @@ const deletePost = utils.asyncWrap(async (req, res, next) => {
   try {
     await Post.findOneAndRemove({ _id: req.params.id });
     await Comment.deleteMany({ post: { $in: req.params.id } });
-    return res.redirect(`/posts`);
+    return res.redirect({ response: { success: true } });
   } catch (err) {
     return next(err);
   }
