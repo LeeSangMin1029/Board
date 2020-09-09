@@ -11,7 +11,8 @@ block content
   .main-container
     #index-header
       h4 Board
-      +searchForm()
+      -if(posts.length)
+        +searchForm()
     +tablebody()
     +pagination()
     - if(isAuthenticated)
@@ -28,20 +29,20 @@ mixin pagination()
 
 mixin tablebody()
   table
-    thead
-      tr
-        th Title
-        th Author
-        th CreatedAt
-  - if(posts.length)
-    tbody#tbody-posts
-      each post in posts
+    -if(posts.length)
+      thead
         tr
-          td: a.post-link.txt-hidden(href=`/posts/${post._id}`)= `${post.title}`
-          td= `${post.author.name}`
-          td= `${post.createdAt}`
-  - else
-    p There are no posts please create it
+          th Title
+          th Author
+          th CreatedAt
+        tbody#tbody-posts
+          each post in posts
+            tr
+              td: a.post-link.txt-hidden(href=`/posts/${post._id}`)= `${post.title}`
+              td= `${post.author.name}`
+              td= `${post.createdAt}`
+    - else
+      p There are no posts please create it
 
 
 mixin searchForm()
