@@ -22,10 +22,7 @@ mixin pagination()
   - if(count)
     div.paginate: div.page-wrap
       - for (let i = 1; i <= count; i++)
-        - if(currentPage === i)
-          button.page.current-page: em.num-page= i
-        - else
-          button.page: em.num-page= i
+        button.page: em.num-page= i
 
 mixin tablebody()
   table
