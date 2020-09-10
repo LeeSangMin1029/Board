@@ -22,7 +22,7 @@ mixin pagination()
   - if(count)
     div.paginate: div.page-wrap
       - for (let i = 1; i <= count; i++)
-        - if(currentPage==i)
+        - if(currentPage === i)
           button.page.current-page: em.num-page= i
         - else
           button.page: em.num-page= i
@@ -35,7 +35,7 @@ mixin tablebody()
           th Title
           th Author
           th CreatedAt
-        tbody#tbody-posts
+        tbody#post-list
           each post in posts
             tr
               td: a.post-link.txt-hidden(href=`/posts/${post._id}`)= `${post.title}`
