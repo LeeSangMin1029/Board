@@ -29,14 +29,15 @@ const addEvent = function (
   );
 };
 
-const nodeListAddEvent = (eachDoc, callFunc) => {
+const nodeListAddEvent = (eachDoc, eventName, callFunc) => {
   if (
+    !eventName ||
     !NodeList.prototype.isPrototypeOf(eachDoc) ||
     !typeof callFunc === "function"
   )
     return;
   eachDoc.forEach((doc) => {
-    callFunc.call(this, doc);
+    addEvent(doc, eventName, callFunc);
   });
 };
 
