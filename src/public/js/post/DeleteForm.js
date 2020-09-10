@@ -13,7 +13,7 @@ const deletePostFormSubmit = async function (form) {
       response: { success = true },
     } = await fetched.json();
     if (success) {
-      navigateToURL(location);
+      navigateToURL("/posts");
     }
   } catch (err) {
     console.log(err);
