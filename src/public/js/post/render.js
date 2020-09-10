@@ -1,168 +1,149 @@
-import { isEmpty } from "../utils/ObjectValidation.js";
-import { nodeListAddEvent, getDocuments, addEvent } from "../utils/Doc.js";
+import {
+  partial,
+  getParameterByName,
+  buildQueryString,
+} from "../utils/Util.js";
+import {
+  nodeListAddEvent,
+  getDocuments,
+  addEvent,
+  toggleClass,
+} from "../utils/Doc.js";
 
-const updateViewPage = async (queryObject, response) => {
+const addEventPageBtn = () => {
   try {
-    let resultQueryString = "";
-    const queryString = buildQueryString(queryObject);
-    if (!isEmpty(queryString)) {
-      resultQueryString += `?${queryString}`;
-    }
-    const { protocol, host, pathname } = window.location;
-    const newurl = `${protocol}//${host}${pathname}${resultQueryString}`;
-    history.pushState(null, "", newurl);
-    const getFromServerData = await getPosts(queryString);
-    response(getFromServerData);
+    const pageAllButtons = getDocuments(".page", true);
+    nodeListAddEvent(pageAllButtons, "click", pageBtnClick);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
-const btnClickEvent = async function () {
+const getFetchRes = async (params = {}, path = "", isPush = false) => {
+  if (!path) return;
   try {
-    currentPageToggle(this);
-    const queryObject = {};
-    const page = getPageNumber(this);
-    const searchText = getParameterByName("search");
-    if (!isEmpty(searchText)) {
-      queryObject.search = searchText;
+    const queryString = buildQueryString(params);
+    const pathname = path + queryString;
+    if (isPush && queryString) {
+      history.pushState({ data: params }, null, pathname);
     }
-    queryObject.page = page;
+    const fetched = await fetch(pathname);
+    return await fetched.json();
   } catch (err) {
-    console.log(err);
+    console.error(err);
+  }
+};
+
+const currentPageHighlighted = function () {
+  try {
+    const pageList = getDocuments(".page", true);
+    pageList.forEach((page) => {
+      page.classList.remove("current-page");
+    });
+    const curPageNumber = getParameterByName("page") || 1;
+    toggleClass(pageList[curPageNumber - 1], "current-page");
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const pageBtnClick = async function () {
+  try {
+    const searchText = getParameterByName("search") || "";
+    const page = this.querySelector(".num-page").innerHTML;
+    const { posts } = await getFetchRes(
+      { search: searchText, page: page },
+      "/posts",
+      true
+    );
+    const postListDoc = getDocuments("#post-list");
+    if (!postListDoc) return;
+    postListDoc.innerHTML = renderedPosts(posts);
+    currentPageHighlighted();
+  } catch (err) {
+    console.error(err);
   }
 };
 
 const searchFormSubmit = async function () {
   try {
     const formData = new FormData(this);
-    let searchText = formData.get("search");
-    const queryString = buildQueryString({ search: searchText });
-
-    // const requestPath = this.action + queryString;
-    // const fetched = await fetch(requestPath, {
-    //   body: formData,
-    //   method: "POST",
-    // });
-    // const { posts, count, currentPage } = await fetched.json();
-    // console.log(posts);
+    const searchText = formData.get("search");
+    const { posts, count } = await getFetchRes(
+      { search: searchText },
+      "/posts",
+      true
+    );
+    const postListDoc = getDocuments("#post-list");
+    postListDoc.innerHTML = renderedPosts(posts);
+    const pageListDoc = getDocuments(".page-wrap");
+    pageListDoc.innerHTML = renderedPageList(count);
+    currentPageHighlighted();
+    addEventPageBtn();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
-// window.addEventListener("popstate", async function (e) {
-//   try {
-//     let page = getParameterByName("page");
-//     let searchText = getParameterByName("search");
-//     const queryObject = {};
-//     if (isEmpty(page)) {
-//       page = 1;
-//     }
-//     if (isEmpty(searchText)) {
-//       searchText = "";
-//     } else {
-//       queryObject.search = searchText;
-//     }
-//     queryObject.page = page;
-//     const prevClickedPage = document.querySelectorAll(".page")[page - 1];
-//     currentPageToggle(prevClickedPage);
-//     const queryString = buildQueryString(queryObject);
-//     const { posts, count, currentPage } = await getPosts(queryString);
-//     renderPosts(posts);
-//     renderPageList(count, currentPage);
-//     document.querySelectorAll(".page").forEach((btn) => {
-//       btn.addEventListener("click", btnClickEvent);
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
-const currentPageToggle = (btnElements) => {
+const popState = async function (e) {
   try {
-    document.querySelector(".current-page").classList.remove("current-page");
-    btnElements.classList.add("current-page");
+    const {
+      data: { search = "", page = 0 },
+    } = e.state;
+    const { posts, count } = await getFetchRes(
+      { page: page, search: search },
+      "/posts"
+    );
+    const postListDoc = getDocuments("#post-list");
+    postListDoc.innerHTML = renderedPosts(posts);
+    const pageListDoc = getDocuments(".page-wrap");
+    pageListDoc.innerHTML = renderedPageList(count);
+    currentPageHighlighted();
+    addEventPageBtn();
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
-const getPageNumber = (btn) => {
-  return btn.querySelector(":scope > .num-page").textContent;
-};
-
-const getParameterByName = (name, url = window.location.href) => {
-  const replacedName = name.replace(/[\[\]]/g, "\\$&");
-  const regex = new RegExp(`[?&]${replacedName}(=([^&#]*)|&|#|$)`),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return "";
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-};
-
-const buildQueryString = (params = {}) => {
-  if (isEmpty(params)) return;
-  return Object.keys(params).reduce((acc, cur) => {
-    const uriComp = encodeURIComponent;
-    const piece = `${uriComp(cur)}=${uriComp(params[cur])}`;
-    return acc + piece;
-  }, "?");
-};
-
-const renderPageList = (count = 0, currentPage = 0) => {
-  if (!count || !currentPage) return;
+const renderedPageList = (count = 0) => {
+  if (!count) return;
   try {
-    let result = "";
-    const pageWrap = document.querySelector(".page-wrap");
-    if (!pageWrap) return;
-    for (let i = 1; i <= count; i++) {
-      if (currentPage == i)
-        result += `<button class="page current-page"><em class="num-page">${i}</em></button>`;
-      else
-        result += `<button class="page"><em class="num-page">${i}</em></button>`;
-    }
-    pageWrap.innerHTML = result;
+    return [...Array(count).keys()].reduce(
+      (acc, i) =>
+        acc +
+        `<button class="page"><em class="num-page">${i + 1}</em></button>`,
+      ""
+    );
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
-function renderPosts(posts = {}) {
+const renderedPosts = (posts = {}) => {
   if (!posts) return;
   try {
-    let result = "";
-    const bodyPosts = document.querySelector("#tbody-posts");
-    if (!bodyPosts) return;
-    for (const post of posts) {
-      result += `<tr><td><a href="/posts/${post._id}" class="txt-hidden">${post.title}</a></td>
+    return Array.from(posts).reduce(
+      (acc, post) =>
+        acc +
+        `<tr><td><a href="/posts/${post._id}" class="txt-hidden">${post.title}</a></td>
         <td>${post.author.name}</td>
-        <td>${post.createdAt}</td></tr>`;
-    }
-    bodyPosts.innerHTML = result;
-  } catch (err) {}
-}
+        <td>${post.createdAt}</td></tr>`,
+      ""
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-async function getPosts(queryString = "") {
-  try {
-    let requestPath = "";
-    if (!queryString) {
-      requestPath = `?${queryString}`;
-    }
-    const fetched = await fetch(`/posts${requestPath}`);
-    return await fetched.json();
-  } catch (err) {}
-}
+const preInit = () => {
+  history.replaceState({ data: { search: "", page: 0 } }, null, location);
+  currentPageHighlighted();
+};
 
 (() => {
-  const pageAllButtons = getDocuments(".page", true);
-  nodeListAddEvent(pageAllButtons, (btn) => {
-    try {
-      addEvent(btn, "click", btnClickEvent);
-    } catch (err) {
-      console.log(err);
-    }
-  });
+  preInit();
+  addEventPageBtn();
   const searchForm = getDocuments("#search-form");
   addEvent(searchForm, "submit", searchFormSubmit, true);
+  addEvent(window, "popstate", popState);
 })();
