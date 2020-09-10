@@ -39,14 +39,10 @@ const createPost = utils.asyncWrap(async (req, res, next) => {
 const renderPosts = utils.asyncWrap(async (req, res, next) => {
   try {
     const { searchQuery } = createSearchQuery(req);
-    const { posts, pageCount, currentPage } = await queryApplyPosts(
-      res,
-      searchQuery
-    );
+    const { posts, pageCount } = await queryApplyPosts(res, searchQuery);
     const renderElements = {
       posts: posts,
       count: pageCount,
-      currentPage: currentPage,
     };
     return res.format({
       "application/json": function () {
@@ -126,7 +122,7 @@ const deletePost = utils.asyncWrap(async (req, res, next) => {
 
 function getQueryString(req, res, next) {
   const result = {};
-  result.page = req.query.page ? req.query.page : 1;
+  result.page = req.query.page || 1;
   result.limit = 5;
   result.startIndex = (result.page - 1) * result.limit;
   res.subject = {};
