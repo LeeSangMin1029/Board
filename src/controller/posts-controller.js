@@ -122,12 +122,16 @@ const deletePost = utils.asyncWrap(async (req, res, next) => {
 
 function getQueryString(req, res, next) {
   const result = {};
-  result.page = req.query.page || 1;
+  result.page = clamp(1, Number.MAX_SAFE_INTEGER, req.query.page || 1);
   result.limit = 5;
   result.startIndex = (result.page - 1) * result.limit;
   res.subject = {};
   res.subject.pageInfo = result;
   next();
+}
+
+function clamp(min, max, val) {
+  return Math.min(Math.max(min, +val), max);
 }
 
 function createSearchQuery({ query }) {
