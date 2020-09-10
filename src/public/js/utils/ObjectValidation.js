@@ -4,7 +4,7 @@ function safeParseJSON(json) {
   try {
     parsed = JSON.parse(json);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
   return parsed;
 }
