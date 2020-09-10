@@ -6,24 +6,37 @@ const getDocuments = (selector = "", isAll = false) => {
     return isAll
       ? document.querySelectorAll(selector)
       : document.querySelector(selector);
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const toggleClass = (doc, toggleClassName) => {
+  if (!doc) return;
+  try {
+    doc.classList.toggle(toggleClassName);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const addEvent = function (
   doc,
   eventName = "",
-  callFunc = {},
+  callFunc = () => {},
   prevent = false,
   useCapture = false
 ) {
-  if (!typeof callFunc === "function" || !doc) return;
+  if (!doc) return;
   doc.addEventListener(
     eventName,
     function (e) {
       prevent ? e.preventDefault() : null;
       try {
         callFunc.call(this, e);
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
     },
     useCapture
   );
@@ -41,4 +54,4 @@ const nodeListAddEvent = (eachDoc, eventName, callFunc) => {
   });
 };
 
-export { getDocuments, addEvent, nodeListAddEvent };
+export { getDocuments, addEvent, toggleClass, nodeListAddEvent };
