@@ -1,8 +1,4 @@
-import {
-  partial,
-  getParameterByName,
-  buildQueryString,
-} from "../utils/Util.js";
+import { getParameterByName, buildQueryString } from "../utils/Util.js";
 import {
   nodeListAddEvent,
   getDocuments,
