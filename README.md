@@ -1,7 +1,6 @@
 # portfolio
-기술 : node-js, mongodb<br>
-언어 : javascript, html, css<br>
-제작 기간 6/16 ~ 9/2<br>
+기술 : node.js, mongodb, javascript, html, css<br>
+
 
 # clone
 npm install<br>
